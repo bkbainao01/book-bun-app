@@ -1,4 +1,5 @@
 import config from '@/config/config'
+import axios from '@/api/axios'
 
 const userPath = '/api/v1/users'
 

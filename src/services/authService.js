@@ -1,9 +1,9 @@
-import axios from 'axios'
 const authPath = '/api/v1/auth'
+import axios from '@/api/axios'
 // ฟังก์ชันเรียก API login
-export async function login(username, password) {
+export async function login(email, password) {
   try {
-    const res = await axios.post(`${authPath}/login`, { username, password })
+    const res = await axios.post(`${authPath}/login`, { email, password })
     return res.data
   } catch (error) {
     throw new Error('Login failed')
