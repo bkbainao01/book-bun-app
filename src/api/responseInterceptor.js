@@ -8,7 +8,7 @@ const onError = (error) => {
 
   if (error.response) {
     // ถ้ามี response จาก server
-    const { status, data } = error.response
+    const { status, data } = error.response;
 
     if (data?.message) {
       errorMessage = data.message
@@ -25,9 +25,9 @@ const onError = (error) => {
     // ถ้าเป็น error อื่น ๆ (เช่น syntax, timeout ฯลฯ)
     errorMessage = error.message
   }
-
+  console.error('API Error:', errorMessage)
   // ส่ง errorMessage ออกไปให้คนเรียกใช้งานไป handle ต่อ
-  return Promise.reject(new Error(errorMessage))
+  throw errorMessage
 }
 
 export default { onSuccess, onError }

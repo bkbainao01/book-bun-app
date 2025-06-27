@@ -1,19 +1,21 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import UserList from '@/components/userComponent/userList';
-import LoginPage from '@/pages/loginPage';
+import UserList from '@/components/user/UserList';
+import LoginPage from '@/pages/LoginPage';
+import ToastContainer from '@/components/ToastContainer';
+import { useRoutes } from 'react-router-dom'
 import './App.css'
+import routes from '@/routes';
+import MainLayout from '@/layouts/MainLayout';
+
 
 function App() {
+  const routing = useRoutes(routes);
   return (
-    <>
     <div>
-      {/* <UserList></UserList> */}
-      <LoginPage></LoginPage>
+      {routing}
+      <ToastContainer />
     </div>
-    </>
-  )
+  );
 }
 
 export default App
