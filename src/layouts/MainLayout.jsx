@@ -6,14 +6,14 @@ function MainLayout() {
 
   return (
     <div className="main-layout w-full">
-      <div className="navbar bg-blue-900 h-15">
+      <div className="navbar">
         <NavbarComponent />
       </div>
-      <div className="flex">
-        <div className='sidebar bg-blue-800 flex-none h-167'>
+      <div className="main-section">
+        <div className='sidebar-section'>
           <SidebarComponent/>
         </div>
-        <div className='content flex-none w-312 h-167  bg-blue-100'>
+        <div className='content-section'>
           <Outlet />
         </div>
       </div>
