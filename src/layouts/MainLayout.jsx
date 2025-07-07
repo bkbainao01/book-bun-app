@@ -5,13 +5,13 @@ import NavbarComponent from "@/components/Navbar";
 function MainLayout() {
 
   return (
-    <div className="main-layout w-full">
-      <div className="navbar">
-        <NavbarComponent />
+    <div className="main-layout">
+      <div className='sidebar-section'>
+        <SidebarComponent/>
       </div>
       <div className="main-section">
-        <div className='sidebar-section'>
-          <SidebarComponent/>
+        <div className="navbar-section">
+          <NavbarComponent />
         </div>
         <div className='content-section'>
           <Outlet />

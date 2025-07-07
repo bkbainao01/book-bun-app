@@ -1,10 +1,9 @@
+@use './variables.scss' as *;
 
-
-:root{
+:root {
   width: 100%;
   height: 100%;
-  background-color: #eceef0;
-  color: #333;
+  color: #ffffff;
 }
 
 body {
@@ -12,17 +11,84 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  background-color: #333;
+}
+
+.main-layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+
+.sidebar-section {
+  height: 100%;
+  width: 250px;
+}
+
+.sidebar-el {
+  background-color: var($sidebar-color);
+  height: 100%;
+
+  .sidebar-box {
+    padding: 5px;
+
+    .logo-box {
+      padding: 5px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: row;
+
+      .logo-img {
+        img {
+          width: 45px;
+          border-radius: 10px;
+          padding: 5px;
+        }
+      }
+      .logo-name {
+        margin-top: 9px;
+        margin-left: 10px;
+        line-height: 12px;
+        .name {
+          font-size: small;
+        }
+        .desc {
+          font-size: x-small;
+          color: #a59c9c;
+        }
+      }
+    }
+    .menu-list {
+      padding: 5px;
+      .menu-item {
+        padding: 5px;
+        display: flex;
+        flex-direction: row;
+        .menu-item-icon {
+          padding: 5px;
+        }
+        .menu-item-name {
+          padding: 5px;
+        }
+      }
+    }
+  }
 }
 
 .main-section {
   width: 100%;
-  flex: auto;
+  height: 100%;
 }
 
-.sidebar-section {
-  width: 250px;
-  flex-shrink: 0;
+.navbar-section {
+  height: 64px;
+  background-color: #615b86 !important;
 }
+
 
 .content-section {
   width: 250px;
