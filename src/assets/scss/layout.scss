@@ -13,7 +13,7 @@ body {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
-  background-color: #333;
+  background-color: $background-color;
 }
 
 .main-layout {
@@ -26,11 +26,12 @@ body {
 
 .sidebar-section {
   height: 100%;
-  width: 250px;
+  width: 230px;
+  flex-shrink: 0;
 }
 
 .sidebar-el {
-  background-color: var($sidebar-color);
+  background-color: $sidebar-color;
   height: 100%;
 
   .sidebar-box {
@@ -64,16 +65,25 @@ body {
     }
     .menu-list {
       padding: 5px;
+
       .menu-item {
+        font-size: 14px;
         padding: 5px;
         display: flex;
         flex-direction: row;
-        .menu-item-icon {
+
+        .menu-item-icon,
+        .menu-item-name,
+        .menu-item-carret {
           padding: 5px;
         }
-        .menu-item-name {
-          padding: 5px;
-        }
+      }
+
+      .menu-item-children {
+        padding: 5px 3px;
+        display: flex;
+        flex-direction: column;
+        margin-left: 20px; // ทำให้ย่อมาจากเมนูหลัก
       }
     }
   }
@@ -86,7 +96,7 @@ body {
 
 .navbar-section {
   height: 64px;
-  background-color: #615b86 !important;
+  background-color: $navbar-color;
 }
 
 

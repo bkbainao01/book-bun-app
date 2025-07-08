@@ -14,14 +14,19 @@ const routes = [
   {
     path: '/',
     element: (
-        <RequireAuth>
-            <MainLayout />
-        </RequireAuth>
+      <RequireAuth>
+        <MainLayout />
+      </RequireAuth>
     ),
     children: [
-      { path: '', element:  <Navigate to="dashboard" replace /> },
+      { path: '', element: <Navigate to="dashboard" replace /> },
       { path: 'dashboard', element: <Dashboard /> },
-      { path: 'users', element: <UserList /> },
+      {
+        path: 'base-info',
+        children: [
+          { path: 'users', element: <UserList /> } // ✅ path is relative here
+        ]
+      }
     ]
   }
 ];
