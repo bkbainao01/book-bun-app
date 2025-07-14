@@ -1,0 +1,21 @@
+@use './variables.scss' as *;
+// pink #E8717E
+// green #AED274
+// grey #C3C9D0
+// brown #7F685B
+// light brown #C2B8B0
+.bg-primary {
+    background-color: #E8717E;
+}
+.bg-input {
+    background-color: #C3C9D0;
+}
+
+
+.login-page {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

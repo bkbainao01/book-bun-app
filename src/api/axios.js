@@ -4,7 +4,6 @@ import responseInterceptor from './responseInterceptor'
 import { config } from '../config/config'
 
 const baseURL = config.baseUrl
-console.log("🚀 ~ baseURL:", baseURL)
 
 const api = axios.create({
   baseURL: baseURL,

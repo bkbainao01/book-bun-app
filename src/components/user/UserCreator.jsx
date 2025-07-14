@@ -10,54 +10,102 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { useState } from "react"
 
-export function userCreator() {
+
+
+
+
+export default function UserCreator() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    firstname: '',
+    lastname: '',
+    status: true,
+  })
+
+  const onFormDataChange = (key, value)=>{
+    setFormData({...formData, [key]: value})
+  }
+
   return (
-    <Card className="w-full max-w-sm">
-      <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
-        <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <form>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <a
-                  href="#"
-                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                >
-                  Forgot your password?
-                </a>
+    <>
+      <div className="user-creator">
+        <Card className="card">
+          <CardHeader>
+            <CardTitle className="header">New User</CardTitle>
+            <CardDescription className="text-muted">
+              Enter form below to create your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form>
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    value={formData.email}
+                    onChange={(e)=>onFormDataChange('email' , e.target.value)}
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                  </div>
+                  <Input id="password" type="password" required value={ formData.password } onChange={(e)=>onFormDataChange('password' , e.target.value)}/>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="firstname">Firstname</Label>
+                  <Input
+                    id="firstname"
+                    type="firstname"
+                    placeholder="John"
+                    value={formData.firstname}
+                    onChange={(e)=>onFormDataChange('firstname' , e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="lastname">Lastname</Label>
+                  </div>
+                  <Input
+                    id="lastname"
+                    type="text"
+                    placeholder="Doe"
+                    value={formData.lastname}
+                    onChange={(e)=>onFormDataChange('lastname' , e.target.value)}
+                    required
+                    />
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="status">Status</Label>
+                  </div>
+                  <Switch
+                    id="status"
+                    checked={formData.status}
+                    onCheckedChange={(checked)=>onFormDataChange('status' , checked)}/>
+                </div>
               </div>
-              <Input id="password" type="password" required />
-            </div>
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-        <Button variant="outline" className="w-full">
-          Login with Google
-        </Button>
-      </CardFooter>
-    </Card>
+            </form>
+          </CardContent>
+          <CardFooter className="">
+            <Button variant="outline" className="me-2">
+              Cancel
+            </Button>
+            <Button type="submit" variant="outline" className="">
+              Save
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   )
 }

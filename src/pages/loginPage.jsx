@@ -16,10 +16,7 @@ export default function LoginPage() {
   const [isPwdVisible, setPwdVisible] = useState(false)
 
   const navigate = useNavigate();
-  const location = useLocation();
   const login = useAuthStore((state) => state.login);
-
-  const from = location.state?.from?.pathname || "/dashboard";
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -38,11 +35,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="shadow-md border-0 bg-white w-120">
+    <div className="login-page">
+      <Card className="card login-card">
         <CardContent>
-            <form className="space-y-4 w-full" onSubmit={handleSubmit}>
-              <h1 className="text-2xl font-bold mb-4 text-center mt-5 mb-6 text-gray-600">Login</h1>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <h1 className="text-2xl font-bold mb-4 text-center mt-5 mb-6 text-gray-600">Book Bun</h1>
               <div className='EmailLabel text-gray-500 mb-1'>Email</div>
               <Input
                 placeholder="Email"
@@ -50,13 +47,13 @@ export default function LoginPage() {
                 value={email} onChange={(e) => setEmail(e.target.value)}
                 className="border-gray-300 focus:ring-blue-200 focus:border-blue-200" />
               <div className='PasswordLabel text-gray-500 mb-1'>Password</div>
-              <div className="flex flex-row">
+              <div className="flex flex-row ">
                   <Input
                     type={ isPwdVisible ? 'text':'password'}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="border-gray-300 focus:ring-blue-200 focus:border-blue-200 w-90"/>
+                    className="border-gray-300 focus:ring-blue-200 focus:border-blue-200 w-100"/>
                   <Button
                     type="button"
                     disabled={loading}

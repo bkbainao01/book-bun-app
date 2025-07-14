@@ -1,0 +1,11 @@
+
+@use './variables.scss' as *;
+
+.card {
+    background-color: $card-color;
+}
+
+.login-card {
+    border: none;
+    width: 400px
+}

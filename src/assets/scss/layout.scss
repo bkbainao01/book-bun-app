@@ -95,12 +95,15 @@ body {
 }
 
 .navbar-section {
-  height: 64px;
+  height: 60px;
   background-color: $navbar-color;
 }
 
 
 .content-section {
-  width: 250px;
   flex-shrink: 0;
+  color: #a59c9c;
+  width: 100%;
+  height: calc(100% - 64px);
+  padding: 40px 20px;
 }

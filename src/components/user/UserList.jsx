@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import {
   Table,
   TableBody,
@@ -18,90 +19,83 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useNavigate } from "react-router-dom"
+import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
+import { useUserStore } from "@/stores/userStore"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
+const onNewUser = async (navigate)=>{
+  console.log("🚀 ~ onNewUser ~ navigate")
+  navigate('/base-info/users/create/')
+}
 
-export default function userList(){
+const onEdit = async ()=>{
+  console.log("OnEdit")
+}
+const onPrint = async ()=>{
+  console.log("OnPrint")
+}
+const onDelete = async ()=>{
+  console.log("OnDelete")
+}
+
+
+export default function UserList() {
+  const navigate = useNavigate();
+  const userStore = useUserStore();  // <-- reactive แล้ว
+  const getAllBooks = useUserStore(state => state.getAll);
+  const userList = userStore.data;
+  useEffect(() => {
+    getAllBooks();
+  }, [getAllBooks]);
+
+
   return (
     <>
-    <div className="w-full">
-      <Card className="mx-5 mt-10 shadow-md border-0 bg-white">
+    <div className="book-list">
+      <Card className="card">
         <CardHeader>
-          <CardTitle className={'text-start'}>Users</CardTitle>
-          <CardDescription className={'text-start'} >Users Information</CardDescription>
-          <CardAction>
-            <Button variant="outline">New User</Button>
+          <CardTitle className={'text-start header'}>Users</CardTitle>
+          <CardDescription className={'text-start text-muted'}  >Users Information</CardDescription>
+          <CardAction onClick={()=>onNewUser(navigate) }>
+            <Button variant="outline"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New User</Button>
           </CardAction>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Email</TableHead>
                 <TableHead>Firstname</TableHead>
                 <TableHead>Lastname</TableHead>
-                <TableHead className="text-right">Status</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.invoice}>
-                  <TableCell className="font-medium">{invoice.invoice}</TableCell>
-                  <TableCell>{invoice.paymentStatus}</TableCell>
-                  <TableCell>{invoice.paymentMethod}</TableCell>
-                  <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+              { userList.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell className="font-medium">{user.firstname}</TableCell>
+                  <TableCell>{user.lastname}</TableCell>
+                  <TableCell className="">{user.email}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="secondary"
+                      className="bg-blue-500 text-white dark:bg-blue-600"
+                    >
+                      Ready
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="outline" className={'me-2'} onClick={ ()=>onEdit() }><FontAwesomeIcon icon={faPen} ></FontAwesomeIcon></Button>
+                    <Button variant="outline" className={'me-2'} onClick={ ()=>onPrint() } ><FontAwesomeIcon icon={faPrint}></FontAwesomeIcon></Button>
+                    <Button variant="outline" onClick={ ()=>onDelete() } ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3} className="">Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
-              </TableRow>
-            </TableFooter>
           </Table>
         </CardContent>
         <CardFooter className="flex-col gap-2">

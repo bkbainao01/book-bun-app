@@ -1,5 +1,6 @@
-import { create } from 'zustand'
-import { login } from '@/services/authService.js'
+import { create } from 'zustand';
+import { login, logout, register } from '@/services/authService.js';
+import { toast } from "sonner"
 
 const getInitialUser = () => {
   try {
@@ -41,10 +42,31 @@ export const useAuthStore = create((set) => ({
       const res = await login(email, password)
       localStorage.setItem('userData',  JSON.stringify(res.data))
       set({ user: res.data.user, token: res.data.token, isLoggedIn: true })
+      toast.success('Login Success')
       return res.data
     } catch (error) {
-      throw new Error(error.message)
+      console.error("AuthStore-login() Error: ",error.message)
+      toast.error('Login Failed')
     }
   },
-  logout: () => set({ user: null, token: null }),
+  logout: async () => {
+    try {
+      const token = useAuthStore.getState().token
+      await logout(token)
+      set({ user: null, token: null })
+      toast.success('Logout Success')
+    } catch (error) {
+      toast.error('Logout Failed')
+      console.error("AuthStore-logout() Error: ",error.message)
+    }
+  },
+  register: async (payload)=>{
+    try {
+      await register(payload)
+      toast.success('Register / Create User Success')
+    } catch (error) {
+      toast.error('Register / Create User Failed')
+      console.error("AuthStore-register() Error: ",error.message)
+    }
+  }
 }))

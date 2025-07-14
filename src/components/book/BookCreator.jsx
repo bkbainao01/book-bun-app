@@ -11,17 +11,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export default function UserEditor() {
+export default function BookCreator() {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="card">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account
+          Enter form below to create your book
         </CardDescription>
-        <CardAction>
-          <Button variant="link">Sign Up</Button>
-        </CardAction>
       </CardHeader>
       <CardContent>
         <form>
@@ -51,11 +48,11 @@ export default function UserEditor() {
         </form>
       </CardContent>
       <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
+        <Button type="submit" className="">
+          Save
         </Button>
-        <Button variant="outline" className="w-full">
-          Login with Google
+        <Button variant="outline" className="">
+          Cancel
         </Button>
       </CardFooter>
     </Card>

@@ -1,12 +1,13 @@
+
 import axios from '@/api/axios'
 
-const userPath = '/api/v1/users'
+const bookPath = '/api/v1/books'
 
 // ฟังก์ชันเรียก API ข้อมูล user
 export async function getAll(params) {
   try {
     const queryParams = ''
-    const res = await axios.get(`${userPath}?${queryParams}`)
+    const res = await axios.get(`${bookPath}?${queryParams}`)
     return res.data
   } catch (error) {
     throw new Error('Fetch user failed')
@@ -15,7 +16,7 @@ export async function getAll(params) {
 
 export async function getById(id) {
   try {
-    const res = await axios.get(`${userPath}/${id}`)
+    const res = await axios.get(`${bookPath}/${id}`)
     return res.data
   } catch (error) {
     throw new Error('Fetch user failed')
@@ -24,7 +25,7 @@ export async function getById(id) {
 
 export async function create(payload) {
   try {
-    const res = await axios.post(`${userPath}`, payload)
+    const res = await axios.post(`${bookPath}`, payload)
     return res.data
   } catch (error) {
     throw new Error('Fetch user failed')
@@ -33,7 +34,7 @@ export async function create(payload) {
 
 export async function update(id,payload) {
   try {
-    const res = await axios.put(`${userPath}/${id}`, payload)
+    const res = await axios.put(`${bookPath}/${id}`, payload)
     return res.data
   } catch (error) {
     throw new Error('Fetch user failed')
@@ -42,7 +43,7 @@ export async function update(id,payload) {
 
 export async function remove(id) {
   try {
-    const res = await axios.delete(`${userPath}/${id}`)
+    const res = await axios.delete(`${bookPath}/${id}`)
     return res.data
   } catch (error) {
     throw new Error('Fetch user failed')
