@@ -1,0 +1,93 @@
+@use './variables.scss' as *;
+
+button {
+    transition: background 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
+    }
+}
+
+.button-new {
+    background-color: transparent !important;
+    border: 1px solid $button-success !important;
+    color: $button-success;
+
+    &:hover {
+        box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
+    }
+}
+
+.button-primary,
+.button-save,
+.button-edit {
+    color: aliceblue;
+}
+
+.button-cancel {
+    background-color: transparent;
+    color: #888;
+    border-color: #888;
+}
+
+.button-print {
+    background-color: $button-secondary !important;
+    color: aliceblue;
+}
+
+.button-delete {
+    background-color: $button-danger !important;
+    color: aliceblue;
+}
+
+
+// button role switch
+
+button[role="switch"] {
+    width: 26px;
+    height: 15px;
+    border-radius: 9999px;
+    background-color: #555;
+    position: relative;
+    transition: background-color 0.3s ease;
+    border: 2px solid transparent;
+}
+
+button[role="switch"]>span {
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease;
+}
+
+button[aria-checked="true"] {
+    background-color: $color-primary;
+    /* สีหลักของคุณ */
+}
+// switch big size
+
+button[role="switch"][size="xl"] {
+    width: 48px;
+    height: 26px;
+    border-radius: 9999px;
+    background-color: #555;
+    position: relative;
+    transition: background-color 0.3s ease;
+    border: 2px solid transparent;
+}
+
+button[role="switch"][size="xl"]>span {
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease;
+}

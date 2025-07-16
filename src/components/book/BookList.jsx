@@ -25,15 +25,20 @@ import { useBookStore } from "@/stores/bookStore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
 import TableComponent from "@/components/TableComponent"
+import { useNavigate } from "react-router-dom"
 
-const onEdit = ()=>{
-  console.log("OnEdit")
+const onEdit = (obj, navigate)=>{
+  navigate(`/base-info/books/view/${obj.id}`)
 }
-const onPrint = ()=>{
-  console.log("OnPrint")
+const onPrint = (obj, navigate)=>{
+  navigate(`/base-info/books/print/${obj.id}`)
 }
-const onDelete = ()=>{
-  console.log("OnDelete")
+const onDelete = (obj)=>{
+  console.log("parent ==> OnDelete: ",obj)
+}
+
+const onNewBook = async (navigate)=>{
+  navigate('/base-info/books/create/')
 }
 
 const tableHeaders = [
@@ -82,6 +87,7 @@ const tableColumns = [
 
 
 export default function BookList() {
+  const navigate = useNavigate();
   const bookStore = useBookStore();
   const getAllBooks = useBookStore(state => state.getAll);
   const bookList = bookStore.data;
@@ -102,15 +108,19 @@ export default function BookList() {
           <CardTitle className={'text-start header'}>Books</CardTitle>
           <CardDescription className={'text-start text-muted'} >Books Information</CardDescription>
           <CardAction>
-            <Button variant="outline"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon> New Book</Button>
+            <Button className='button-new' onClick={()=>onNewBook(navigate)} ><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New Book</Button>
           </CardAction>
         </CardHeader>
         <CardContent>
           <TableComponent
+            tableName="book-table"
             headers={tableHeaders}
             columns={tableColumns}
             dataList={bookList}
-
+            action={{ isAction:true, isEdit: true, isPrint:true, isDelete: true}}
+            onEdit={(value)=>onEdit(value , navigate)}
+            onPrint={(value)=>onPrint(value , navigate)}
+            onDelete={(value)=>onDelete(value)}
           ></TableComponent>
         </CardContent>
         <CardFooter className="flex-col gap-2">

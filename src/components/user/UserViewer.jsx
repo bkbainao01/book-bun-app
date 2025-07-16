@@ -17,7 +17,10 @@ import { useState } from "react"
 
 
 
-export default function UserCreator() {
+export default function UserCreator({
+  viewMode=true,
+  isReadOnly=false
+ }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -35,31 +38,31 @@ export default function UserCreator() {
       <div className="user-creator">
         <Card className="card">
           <CardHeader>
-            <CardTitle className="header">New User</CardTitle>
+            <CardTitle className="header">{ viewMode ? 'User' : 'New User' }</CardTitle>
             <CardDescription className="text-muted">
-              Enter form below to create your account
+             { viewMode ? 'User information' : 'Enter form below to create your account'}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form className={isReadOnly ? 'readonly': ''}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="m@example.com"
+                    placeholder="john.doe@bookbun.com"
                     required
                     value={formData.email}
                     onChange={(e)=>onFormDataChange('email' , e.target.value)}
                   />
                 </div>
-                <div className="grid gap-2">
+                { !viewMode && <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                   </div>
                   <Input id="password" type="password" required value={ formData.password } onChange={(e)=>onFormDataChange('password' , e.target.value)}/>
-                </div>
+                </div>}
                 <div className="grid gap-2">
                   <Label htmlFor="firstname">Firstname</Label>
                   <Input
@@ -90,17 +93,18 @@ export default function UserCreator() {
                   </div>
                   <Switch
                     id="status"
+                    className={'switch-control'}
                     checked={formData.status}
                     onCheckedChange={(checked)=>onFormDataChange('status' , checked)}/>
                 </div>
               </div>
             </form>
           </CardContent>
-          <CardFooter className="">
-            <Button variant="outline" className="me-2">
+          <CardFooter className="justify-end">
+            <Button variant="outline" className="button-cancel me-2">
               Cancel
             </Button>
-            <Button type="submit" variant="outline" className="">
+            <Button type="submit" className="button-save">
               Save
             </Button>
           </CardFooter>

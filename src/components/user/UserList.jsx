@@ -25,21 +25,65 @@ import { toast } from "sonner"
 import { useUserStore } from "@/stores/userStore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
+import TableComponent from "@/components/TableComponent"
 
 const onNewUser = async (navigate)=>{
-  console.log("🚀 ~ onNewUser ~ navigate")
   navigate('/base-info/users/create/')
 }
 
-const onEdit = async ()=>{
-  console.log("OnEdit")
+const onEdit = (value)=>{
+  console.log("parent ==> OnEdit: ",value)
 }
-const onPrint = async ()=>{
-  console.log("OnPrint")
+const onPrint = (value)=>{
+  console.log("parent ==> OnPrint: ", value)
 }
-const onDelete = async ()=>{
-  console.log("OnDelete")
+const onDelete = (value)=>{
+  console.log("parent ==> OnDelete: ",value)
 }
+
+const tableHeaders = [
+              {
+                name:'Firstname',
+                width:'',
+                class: '',
+              },
+              {
+                name:'Lastname',
+                width:'',
+                class: '',
+              }, {
+                name:'Email',
+                width:'',
+                class: '',
+              }, {
+                name:'Status',
+                width:'',
+                class: '',
+              }, {
+                name:'Action',
+                width:'',
+                class: '',
+              }
+            ];
+
+const tableColumns = [
+  {
+    name: 'firstname',
+    class:''
+  },
+  {
+    name: 'lastname',
+    class:''
+  },
+  {
+    name: 'email',
+    class:''
+  },
+  {
+    name: 'status',
+    class:''
+  },
+]
 
 
 export default function UserList() {
@@ -60,43 +104,20 @@ export default function UserList() {
           <CardTitle className={'text-start header'}>Users</CardTitle>
           <CardDescription className={'text-start text-muted'}  >Users Information</CardDescription>
           <CardAction onClick={()=>onNewUser(navigate) }>
-            <Button variant="outline"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New User</Button>
+            <Button className="button-new"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New User</Button>
           </CardAction>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Firstname</TableHead>
-                <TableHead>Lastname</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              { userList.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.firstname}</TableCell>
-                  <TableCell>{user.lastname}</TableCell>
-                  <TableCell className="">{user.email}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant="secondary"
-                      className="bg-blue-500 text-white dark:bg-blue-600"
-                    >
-                      Ready
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outline" className={'me-2'} onClick={ ()=>onEdit() }><FontAwesomeIcon icon={faPen} ></FontAwesomeIcon></Button>
-                    <Button variant="outline" className={'me-2'} onClick={ ()=>onPrint() } ><FontAwesomeIcon icon={faPrint}></FontAwesomeIcon></Button>
-                    <Button variant="outline" onClick={ ()=>onDelete() } ><FontAwesomeIcon icon={faTrash}></FontAwesomeIcon></Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <TableComponent
+          tableName="user-table"
+            headers={tableHeaders}
+            columns={tableColumns}
+            dataList={userList}
+            action={{ isAction:true, isEdit: true, isPrint:true, isDelete: true}}
+            onEdit={(value)=>onEdit(value, navigate)}
+            onPrint={(value)=>onPrint(value, navigate)}
+            onDelete={(value)=>onDelete(value)}
+          ></TableComponent>
         </CardContent>
         <CardFooter className="flex-col gap-2">
         </CardFooter>

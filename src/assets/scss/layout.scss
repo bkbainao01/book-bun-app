@@ -28,6 +28,7 @@ body {
   height: 100%;
   width: 230px;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar-el {
@@ -36,35 +37,59 @@ body {
 
   .sidebar-box {
     padding: 5px;
+    height: 100%;
 
-    .logo-box {
+    .header {
       padding: 5px;
       border-radius: 6px;
       display: flex;
       flex-direction: row;
+      cursor: pointer;
 
-      .logo-img {
-        img {
+      .logo {
+        display: flex;
+        flex-direction: row;
+        .img-box {
           width: 45px;
-          border-radius: 10px;
           padding: 5px;
+          img {
+              border-radius: 10px;
+              filter: drop-shadow(0px -1px 6px #f54b4b33);
+          }
+        }
+        .text-box {
+          margin-top: 9px;
+          margin-left: 10px;
+          line-height: 12px;
+          .name {
+            font-size: small;
+          }
+          .desc {
+            font-size: x-small;
+            color: #a59c9c;
+          }
         }
       }
-      .logo-name {
-        margin-top: 9px;
-        margin-left: 10px;
-        line-height: 12px;
-        .name {
-          font-size: small;
-        }
-        .desc {
-          font-size: x-small;
-          color: #a59c9c;
-        }
+      .toggle-button {
+        color:#ffffff;
+        position: absolute;
+        top: 30px;
+        left: 13.5rem;
+        transform: translateY(-50%);
+        height: 25px;
+        width: 25px;
+        background-color: $header-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        box-shadow: 0 4px 6px #444;
       }
     }
-    .menu-list {
+    .menu-bar {
+      height: calc(100% - 142px);
       padding: 5px;
+      color: #ffffff;
 
       .menu-item {
         font-size: 14px;
@@ -77,13 +102,43 @@ body {
         .menu-item-carret {
           padding: 5px;
         }
+
+        &.active {
+          background-color: #444;
+          color: #E8717E;
+          border-radius: 6px;
+          .menu-item-icon,
+          .menu-item-name,
+          .menu-item-carret {
+            padding: 5px;
+          }
+        }
       }
 
       .menu-item-children {
         padding: 5px 3px;
         display: flex;
         flex-direction: column;
-        margin-left: 20px; // ทำให้ย่อมาจากเมนูหลัก
+        margin-left: 20px;
+      }
+    }
+    .footer {
+      .footer-items {
+         font-size: 14px;
+         padding: 5px;
+         display: flex;
+         flex-direction: column;
+
+        .item {
+          font-size: 14px;
+          padding: 5px;
+          display: flex;
+          flex-direction: row;
+          .icon,
+          .name {
+            padding: 5px;
+          }
+        }
       }
     }
   }
