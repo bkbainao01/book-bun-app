@@ -93,7 +93,7 @@ export default function UserCreator({
                   </div>
                   <Switch
                     id="status"
-                    className={'switch-control'}
+                    className={'size-xl'}
                     checked={formData.status}
                     onCheckedChange={(checked)=>onFormDataChange('status' , checked)}/>
                 </div>

@@ -71,7 +71,7 @@ button[aria-checked="true"] {
 }
 // switch big size
 
-button[role="switch"][size="xl"] {
+button[role="switch"].size-xl {
     width: 48px;
     height: 26px;
     border-radius: 9999px;
@@ -81,7 +81,7 @@ button[role="switch"][size="xl"] {
     border: 2px solid transparent;
 }
 
-button[role="switch"][size="xl"]>span {
+button[role="switch"].size-xl>span {
     position: absolute;
     left: 2px;
     top: 1px;
@@ -90,4 +90,10 @@ button[role="switch"][size="xl"]>span {
     border-radius: 50%;
     background-color: white;
     transition: transform 0.3s ease;
+}
+
+button.visible-pwd-button {
+    position: relative;
+    top: 10%;
+    
 }

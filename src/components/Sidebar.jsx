@@ -1,21 +1,23 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
-  faCaretDown,
+  faCaretLeft,
   faCaretRight,
   faFolder,
   faHome,
   faMoon,
   faRightFromBracket,
+  faSun,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Switch } from "./ui/switch";
+import { useAuthStore } from "@/stores/authStore";
+import { useForm } from "react-hook-form"
+import { useEffect } from "react";
 
-function SidebarComponent() {
-  const navigate = useNavigate();
-  const initMenuList = [
+const initMenuList = [
     {
       name: "Dashboard",
       route: "/dashboard",
@@ -24,6 +26,8 @@ function SidebarComponent() {
     },
     {
       name: "Basic Information",
+      code: "BI",
+      isParent: true,
       icon: faFolder,
       isVisible: true,
       isChildrenVisible: false,
@@ -43,88 +47,83 @@ function SidebarComponent() {
       ],
     },
   ];
-  const [menuList, setMenuList] = useState([...initMenuList]);
-  const [isOpen, setIsOpen] = useState(false);
 
-  const onClickMenu = (item, index) => {
-    if (item?.children?.length) {
-      openSubMunu(true, item, index);
-    } else {
-      routeDestination(item);
-    }
+
+  const onClickMenu = (item, navigate) => {
+      navigate(item.route);
   };
+
+  const menuChildListElement = (childList, currentPath, navigate)=>{
+    return childList.map((child, index ) => {
+      const isActive = child.route === currentPath;
+      return (
+        <div className={`menu-item ${ isActive ? "active" : "" }`} onClick={() => onClickMenu(child, navigate)} key={index} title={child.name} >
+          <div className={`menu-item-icon`}><FontAwesomeIcon icon={ child.icon || "" } /></div>
+          <div className={`menu-item-name`}>{child.name}</div>
+        </div>
+      )
+    })
+  }
+
+  const menuListElement = (menuList, currentPath, navigate , isClose) => {
+    return menuList.map((item, index) => {
+      const isActive = item.route === currentPath;
+      return (
+        <div key={index}>
+              <div className={`menu-item ${ isActive ? "active" : "" }`} onClick={() => onClickMenu(item, navigate)} title={ item.name } >
+                { !item.isParent && (<div className={`menu-item-icon`}><FontAwesomeIcon icon={ item.icon || "" } /></div>)}
+                <div className={`menu-item-name ${item?.isParent === true ? 'parent' : '' }`}>{ item?.isParent && isClose ? item.code : item.name}</div>
+              </div>
+          { item?.isParent === true && menuChildListElement(item.children , currentPath, navigate) }
+        </div>
+      );
+    })
+  }
+
+  const onLogout = async (authStore, navigate)=>{
+      await authStore.logout()
+      navigate('/login', { replace: true });
+  }
+
+  const onClickDarkModeToggle = (value , setIsDarkMode) => {
+    setIsDarkMode(value);
+    const element = document.getElementById("main-layout")
+    if(element && value) {
+      element.classList.add("dark");
+    } else if(element && !value) {
+      element.classList.remove("dark");
+    } else {
+      console("doesn't have element...")
+    }
+  }
+
+  const setDefaultMode = (isDarkMode)=>{
+    const element = document.getElementById("main-layout");
+    if (element) {
+      if (isDarkMode) {
+        element.classList.add("dark");
+      } else {
+        element.classList.remove("dark");
+      }
+    }
+  }
+
+function SidebarComponent() {
+  const navigate = useNavigate();
+  const authStore = useAuthStore();
+  const [menuList, setMenuList] = useState([...initMenuList]);
+  const [isClose, setIsClose] = useState(false);
+  const isDarkModeDefault = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const [isDarkMode, setIsDarkMode] = useState(isDarkModeDefault);
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const routeDestination = (item) => {
-    navigate(item.route);
-  };
-
-  const openSubMunu = (value, item, index) => {
-    setIsOpen(!isOpen);
-    const updatedMenuList = [...menuList];
-    updatedMenuList[index].isChildrenVisible =
-      !updatedMenuList[index].isChildrenVisible;
-    setMenuList(updatedMenuList);
-  };
-
-  const menuListElement = menuList.map((item, index) => {
-            const isActive = item.route === currentPath;
-            const isOpenParent = item.children?.some(
-              (child) => child.route === currentPath
-            );
-
-            return (
-              <div key={index}>
-                <div
-                  className={`menu-item ${
-                    isActive || isOpenParent ? "active" : ""
-                  }`}
-                  onClick={() => onClickMenu(item, index)}
-                >
-                  <div className="menu-item-icon">
-                    <FontAwesomeIcon icon={item.icon || ""} />
-                  </div>
-                  <div className="menu-item-name">{item.name}</div>
-
-                  {item.children?.length && (
-                    <div
-                      className={`pt-1 px-2 menu-item-caret transition-transform duration-300 ease-in-out ${
-                        item.isChildrenVisible ? "rotate-180" : "rotate-0"
-                      }`}
-                    >
-                      <FontAwesomeIcon icon={faCaretDown} />
-                    </div>
-                  )}
-                </div>
-
-                {item.isChildrenVisible && (
-                  <div className="menu-item-children">
-                    {item.children.map((child, cIndex) => {
-                      const isChildActive = child.route === currentPath;
-                      return (
-                        <div
-                          className={`menu-item ${
-                            isChildActive ? "active" : ""
-                          }`}
-                          key={cIndex}
-                          onClick={() => routeDestination(child)}
-                        >
-                          <div className="menu-item-icon">
-                            <FontAwesomeIcon icon={child.icon || ""} />
-                          </div>
-                          <div className="menu-item-name">{child.name}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })
+  useEffect(() => {
+    setDefaultMode(isDarkMode)
+  }, [isDarkMode]);
 
   return (
-    <div className="sidebar-el">
+    <div className={`sidebar ${ isClose ? 'close' : ''}`}>
       <div className="sidebar-box">
         <div className="header">
           <div className="logo">
@@ -136,24 +135,26 @@ function SidebarComponent() {
               <span className="desc">Book System</span>
             </div>
           </div>
-          <div className="toggle-button">
-            <FontAwesomeIcon icon={ faCaretRight } />
+          <div className="toggle-button" onClick={()=>setIsClose(!isClose)} >
+            <FontAwesomeIcon icon={ isClose ? faCaretRight : faCaretLeft } />
           </div>
         </div>
         <div className="menu-bar">
-          { menuListElement }
+          { menuListElement(menuList, currentPath, navigate, isClose) }
         </div>
         <div className="footer">
           <div className="footer-items">
-            <div className="item">
-              <div className="icon"><FontAwesomeIcon icon={ faRightFromBracket } /></div>
-              <div className="name">Logout</div>
+            <div className="menu-item " onClick={()=>onLogout(authStore, navigate)} title="Logout" >
+              <div className="menu-item-icon"><FontAwesomeIcon icon={ faRightFromBracket } /></div>
+              <div className="menu-item-name">Logout</div>
             </div>
-            <div className="item">
-              <div className="icon"><FontAwesomeIcon icon={ faMoon } /></div>
-              <div className="name">Dark Mode</div>
-              <div className="switch ml-auto">
-                <Switch className="mt-2" ></Switch>
+            <div className="menu-item" title={ isDarkMode ? 'Dark Mode' : 'Light Mode' }>
+              { !isClose && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
+              <div className="menu-item-name">{isDarkMode ? 'Dark' : 'Light'} Mode</div>
+              <div className={`menu-item-switch ${ isClose ? '':'ml-auto'}`}>
+                <Switch className="mt-1"
+                  checked={isDarkMode}
+                  onCheckedChange={(value)=>onClickDarkModeToggle(value, setIsDarkMode)}></Switch>
               </div>
             </div>
           </div>

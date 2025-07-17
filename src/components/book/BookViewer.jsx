@@ -20,7 +20,7 @@ export default function BookCreator({
   isReadOnly = false,
 }) {
   const bookStore = useBookStore();
-  
+
   const initFormData = {
       name: '',
       author: '',

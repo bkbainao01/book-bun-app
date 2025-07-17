@@ -1,0 +1,25 @@
+.tooltip-container {
+  cursor: pointer;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 100%; /* ด้านขวาของตัวที่ hover */
+  transform: translateY(-50%);
+  margin-left: 6px;
+  background-color: #333;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+  z-index: 200;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

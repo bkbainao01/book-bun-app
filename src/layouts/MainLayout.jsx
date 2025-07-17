@@ -5,10 +5,8 @@ import NavbarComponent from "@/components/Navbar";
 function MainLayout() {
 
   return (
-    <div className="main-layout">
-      <div className='sidebar-section'>
-        <SidebarComponent/>
-      </div>
+    <div className="main-layout" id="main-layout">
+      <SidebarComponent/>
       <div className="main-section">
         <div className="navbar-section">
           <NavbarComponent />
