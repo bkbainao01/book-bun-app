@@ -1,12 +1,87 @@
-# React + Vite
+# book-bun-app
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application built with Vite, Tailwind CSS, and a rich set of libraries for UI, state management, and routing.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [About](#about)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Code Quality](#code-quality)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## About
+
+`book-bun-app` is a React-based web app scaffolded with Vite. It leverages Tailwind CSS for styling and includes robust routing, form handling, state management, and UI libraries for building a fast, accessible, and scalable front-end application.
+
+---
+
+## Features
+
+- **React 19** for building declarative UI
+- **Vite** for lightning-fast development and production build
+- **Tailwind CSS** for utility-first styling and responsive design
+- **React Router DOM** for client-side routing
+- **React Hook Form** for flexible form handling
+- **Zustand** for lightweight and scalable state management
+- **Shadcn UI** and **Radix UI** components for accessible UI primitives
+- **FontAwesome** and **Lucide** icons for rich visual elements
+- **Next Themes** for easy dark/light theme toggling
+- **Axios** for HTTP requests
+- **ESLint** with React Hooks plugin for code quality and best practices
+- **Sass Embedded** for advanced styling support
+- **Tailwind Animate CSS** for smooth animations
+
+---
+
+## Tech Stack
+
+| Technology          | Purpose                              |
+|---------------------|------------------------------------|
+| React               | UI Framework                       |
+| Vite                | Build Tool & Dev Server             |
+| Tailwind CSS        | Styling                            |
+| React Router DOM    | Routing                           |
+| React Hook Form     | Form management                   |
+| Zustand             | State management                  |
+| Radix UI            | Accessible UI primitives          |
+| Shadcn UI           | UI components                     |
+| FontAwesome, Lucide | Iconography                       |
+| Next Themes         | Theme toggling                    |
+| Axios               | HTTP client                      |
+| ESLint              | Linting and code standards       |
+| Sass Embedded       | CSS preprocessor                  |
+
+---
+
+## Installation
+
+### Prerequisites
+
+- Node.js >= 16.x
+- npm or yarn package manager
+
+### Steps
+
+```bash
+# Clone the repository
+git clone <repository-url>
+
+# Navigate to the project directory
+cd book-bun-app
+
+# Install dependencies
+npm install
+# or
+yarn install
