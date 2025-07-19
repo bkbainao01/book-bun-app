@@ -8,7 +8,8 @@ export async function login(email, password) {
     const res = await axios.post(`${authPath}/login`, { email, password })
     return res.data
   } catch (error) {
-    throw new Error(error)
+    console.error("error: ", error)
+    throw error
   }
 }
 
@@ -18,7 +19,8 @@ export async function logout(token) {
     const res = await axios.post(`${authPath}/logout`, {token: token})
     return res.data
   } catch (error) {
-    throw new Error(error)
+    console.error("error: ", error)
+    throw error
   }
 }
 
@@ -28,6 +30,7 @@ export async function register(payload) {
     const res = await axios.post(`${authPath}/register`, payload)
     return res.data
   } catch (error) {
-    throw new Error(error)
+    console.error("error: ", error)
+    throw error
   }
 }

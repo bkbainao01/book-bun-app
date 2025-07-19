@@ -13,8 +13,7 @@ export const useUserStore = create((set) => ({
       toast.success("Get All Users Success");
       return res.data;
     } catch (error) {
-      console.error("UserStore-getAll() Error:",error.message);
-      toast.success("Get All Users Failed");
+      toast.error(error.title, { description: error.message });
     }
   },
   getById: async (params) => {
@@ -24,8 +23,7 @@ export const useUserStore = create((set) => ({
       toast.success("Get User Success");
       return res.data;
     } catch (error) {
-      console.error("UserStore-getById() Error:",error.message);
-      toast.success("Get User Failed");
+      toast.error(error.title, { description: error.message });
     }
   },
 }))

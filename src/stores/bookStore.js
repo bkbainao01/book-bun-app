@@ -12,8 +12,7 @@ export const useBookStore = create((set) => ({
       toast.success('Get All Books Success')
       return res.data;
     } catch (error) {
-      console.error("BookStore-getAll() Error: ",error.message)
-      toast.error('Get All Books Error')
+      toast.error(error.title, { description: error.message });
     }
   },
   getById: async (params) => {
@@ -23,8 +22,7 @@ export const useBookStore = create((set) => ({
       toast.success('Get Book Success')
       return res.data;
     } catch (error) {
-      console.error("BookStore-getById() Error: ",error.message)
-      toast.error('Get All Books Error')
+      toast.error(error.title, { description: error.message });
     }
   },
 }))
