@@ -9,7 +9,8 @@ export async function getAll(params) {
     const res = await axios.get(`${userPath}?${queryParams}`)
     return res.data
   } catch (error) {
-    throw new Error('Fetch user failed')
+    console.error("error: ", error)
+    throw error
   }
 }
 
@@ -18,7 +19,8 @@ export async function getById(id) {
     const res = await axios.get(`${userPath}/${id}`)
     return res.data
   } catch (error) {
-    throw new Error('Fetch user failed')
+    console.error("error: ", error)
+    throw error
   }
 }
 
@@ -27,7 +29,8 @@ export async function create(payload) {
     const res = await axios.post(`${userPath}`, payload)
     return res.data
   } catch (error) {
-    throw new Error('Fetch user failed')
+    console.error("error: ", error)
+    throw error
   }
 }
 
@@ -36,7 +39,8 @@ export async function update(id,payload) {
     const res = await axios.put(`${userPath}/${id}`, payload)
     return res.data
   } catch (error) {
-    throw new Error('Fetch user failed')
+    console.error("error: ", error)
+    throw error
   }
 }
 
@@ -45,7 +49,8 @@ export async function remove(id) {
     const res = await axios.delete(`${userPath}/${id}`)
     return res.data
   } catch (error) {
-    throw new Error('Fetch user failed')
+    console.error("error: ", error)
+    throw error
   }
 }
 
