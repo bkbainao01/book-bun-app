@@ -6,8 +6,9 @@ import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from "sonner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faG } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from "react-router-dom";
+import { faApple, faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export default function LoginPage() {
   const {
@@ -40,7 +41,12 @@ export default function LoginPage() {
       <Card className="card login-card">
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            <h1 className="color-primary">Book Bun</h1>
+            <div className="login-header">
+              <p className='header'>Book Bun</p>
+              <small className="desc">
+                เข้าสู่ระบบเพื่อเริ่มต้นโลกแห่งหนังสือของคุณ <br />
+                เพราะเราเชื่อว่า... หนังสือที่ดี ไม่ควรอยู่เฉยๆ บนชั้นวาง</small>
+            </div>
             <div className='EmailLabel text-gray-500 mb-1'>Email</div>
             <Input
               placeholder="Email"
@@ -70,6 +76,34 @@ export default function LoginPage() {
             >
               {loading ? 'Logging in...' : 'Login'}
             </Button>
+
+            <div>or continue with</div>
+            <div className="social-buttons">
+              <Button
+                type="button"
+                disabled={loading}
+                size="icon"
+                variant="secondary"
+              >
+                <FontAwesomeIcon icon={faGoogle} />
+              </Button>
+              <Button
+                type="button"
+                disabled={loading}
+                size="icon"
+                variant="secondary"
+              >
+                <FontAwesomeIcon icon={faApple} />
+              </Button>
+              <Button
+                type="button"
+                disabled={loading}
+                size="icon"
+                variant="secondary"
+              >
+                <FontAwesomeIcon icon={faFacebookF} />
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

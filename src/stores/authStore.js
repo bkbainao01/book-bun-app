@@ -45,8 +45,7 @@ export const useAuthStore = create((set) => ({
       toast.success('Login Success')
       return res.data
     } catch (error) {
-      console.error("AuthStore-login() Error: ",error.message)
-      toast.error('Login Failed')
+      toast.error(error.title, { description: error.message });
     }
   },
   logout: async () => {
@@ -56,8 +55,7 @@ export const useAuthStore = create((set) => ({
       set({ user: null, token: null })
       toast.success('Logout Success')
     } catch (error) {
-      toast.error('Logout Failed')
-      console.error("AuthStore-logout() Error: ",error.message)
+      toast.error(error.title, { description: error.message });
     }
   },
   register: async (payload)=>{
@@ -65,8 +63,7 @@ export const useAuthStore = create((set) => ({
       await register(payload)
       toast.success('Register / Create User Success')
     } catch (error) {
-      toast.error('Register / Create User Failed')
-      console.error("AuthStore-register() Error: ",error.message)
+      toast.error(error.title, { description: error.message });
     }
   }
 }))
