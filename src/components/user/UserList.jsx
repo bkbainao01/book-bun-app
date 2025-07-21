@@ -25,7 +25,7 @@ import { toast } from "sonner"
 import { useUserStore } from "@/stores/userStore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
-import TableComponent from "@/components/TableComponent"
+import TableDataComponent from "@/components/TableDataComponent"
 
 const onNewUser = async (navigate)=>{
   navigate('/base-info/users/create/')
@@ -41,46 +41,25 @@ const onDelete = (value)=>{
   console.log("parent ==> OnDelete: ",value)
 }
 
-const tableHeaders = [
-              {
-                name:'Firstname',
-                width:'',
-                class: '',
-              },
-              {
-                name:'Lastname',
-                width:'',
-                class: '',
-              }, {
-                name:'Email',
-                width:'',
-                class: '',
-              }, {
-                name:'Status',
-                width:'',
-                class: '',
-              }, {
-                name:'Action',
-                width:'',
-                class: '',
-              }
-            ];
-
 const tableColumns = [
   {
-    name: 'firstname',
+    key: 'firstname',
     class:''
   },
   {
-    name: 'lastname',
+    key: 'lastname',
     class:''
   },
   {
-    name: 'email',
+    key: 'email',
     class:''
   },
   {
-    name: 'status',
+    key: 'roles',
+    class:''
+  },
+  {
+    key: 'status',
     class:''
   },
 ]
@@ -108,16 +87,15 @@ export default function UserList() {
           </CardAction>
         </CardHeader>
         <CardContent>
-          <TableComponent
-          tableName="user-table"
-            headers={tableHeaders}
-            columns={tableColumns}
+          <TableDataComponent
+            tableName="user-table"
+            tableColumns={tableColumns}
             dataList={userList}
             action={{ isAction:true, isEdit: true, isPrint:true, isDelete: true}}
             onEdit={(value)=>onEdit(value, navigate)}
             onPrint={(value)=>onPrint(value, navigate)}
             onDelete={(value)=>onDelete(value)}
-          ></TableComponent>
+          ></TableDataComponent>
         </CardContent>
         <CardFooter className="flex-col gap-2">
         </CardFooter>
