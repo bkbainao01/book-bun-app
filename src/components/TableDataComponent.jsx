@@ -116,27 +116,30 @@ import {
 // 🔹 Columns definition
 
 function capitalizeLetter(str) {
-  if (!str) return '';
+  if (!str) {
+    return "";
+  }
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 const dynamicColList = (col) => {
-    return col.map((field) => ({
+  return col.map((field) => ({
     accessorKey: field.key,
     header: capitalizeLetter(field.key),
     enableHiding: false,
     cell: ({ row }) => {
-      if(field.key == 'roles') {
-        return row.original[field.key].map(item => `${item.role.name}`).join(", ")
-      } else if(field.key == 'status') {
-        return (row.getValue(field.key) === true ? "True" : "False")
+      if (field.key == "roles") {
+        return row.original[field.key]
+          .map((item) => `${item.role.name}`)
+          .join(", ");
+      } else if (field.key == "status") {
+        return row.getValue(field.key) === true ? "True" : "False";
       } else {
-        return row.getValue(field.key)
+        return row.getValue(field.key);
       }
-    }
-    })
-  )}
-
+    },
+  }));
+};
 
 // 🔹 Main table component
 export default function TableDataComponent({
@@ -165,11 +168,36 @@ export default function TableDataComponent({
       id: "actions",
       enableHiding: !action.isAction,
       cell: ({ row }) => {
-        return (<div>
-            { action.isEdit && (<Button className="button-edit me-2" size="sm" onClick={()=>onEdit(row)} ><FontAwesomeIcon icon={faPen} /></Button>)}
-            { action.isPrint && (<Button className="button-print me-2" size="sm" onClick={()=>onPrint(row)} ><FontAwesomeIcon icon={faPrint} /></Button>)}
-            { action.isDelete && (<Button className="button-delete" size="sm" onClick={()=>onDelete(row)} ><FontAwesomeIcon icon={faTrash} /></Button>)}
-        </div>
+        return (
+          <div>
+            {action.isEdit && (
+              <Button
+                className="button-edit me-2"
+                size="sm"
+                onClick={() => onEdit(row.original)}
+              >
+                <FontAwesomeIcon icon={faPen} />
+              </Button>
+            )}
+            {action.isPrint && (
+              <Button
+                className="button-print me-2"
+                size="sm"
+                onClick={() => onPrint(row)}
+              >
+                <FontAwesomeIcon icon={faPrint} />
+              </Button>
+            )}
+            {action.isDelete && (
+              <Button
+                className="button-delete"
+                size="sm"
+                onClick={() => onDelete(row)}
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </Button>
+            )}
+          </div>
         );
       },
     },
@@ -178,8 +206,6 @@ export default function TableDataComponent({
   useEffect(() => {
     console.log("dataList  >> ", dataList);
   }, [dataList]);
-
-
 
   const table = useReactTable({
     data: dataList ?? [],

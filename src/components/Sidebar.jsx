@@ -80,11 +80,6 @@ const initMenuList = [
     })
   }
 
-  const onLogout = async (authStore, navigate)=>{
-      await authStore.logout()
-      navigate('/login', { replace: true });
-  }
-
   const onClickDarkModeToggle = (value , setIsDarkMode) => {
     setIsDarkMode(value);
     const element = document.getElementById("main-layout")
@@ -144,7 +139,7 @@ function SidebarComponent() {
         </div>
         <div className="footer">
           <div className="footer-items">
-            <div className="menu-item " onClick={()=>onLogout(authStore, navigate)} title="Logout" >
+            <div className="menu-item " onClick={()=>authStore.logout(navigate)} title="Logout" >
               <div className="menu-item-icon"><FontAwesomeIcon icon={ faRightFromBracket } /></div>
               <div className="menu-item-name">Logout</div>
             </div>

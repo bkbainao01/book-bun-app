@@ -31,8 +31,11 @@ const onNewUser = async (navigate)=>{
   navigate('/base-info/users/create/')
 }
 
-const onEdit = (value)=>{
-  console.log("parent ==> OnEdit: ",value)
+const onEdit = (value,navigate)=>{
+  console.log("🚀 ~ onEdit ~ value:", value)
+  if (value?.id && navigate) {
+    navigate(`/base-info/users/view/${value.id}`);
+  }
 }
 const onPrint = (value)=>{
   console.log("parent ==> OnPrint: ", value)

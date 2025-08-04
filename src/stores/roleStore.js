@@ -1,16 +1,15 @@
 import { create } from 'zustand'
-import { getAll, getById, create as createUser } from '@/services/userService';
+import { getAll, getById } from '@/services/roleService';
 import { toast } from "sonner"
 
-
-export const useUserStore = create((set) => ({
+export const useRoleStore = create((set) => ({
   data: [],
   selectedData:  {},
   getAll: async (params) => {
     try {
       const res = await getAll(params);
       set({ data: res.data, selectedData: {} });
-      toast.success("Get All Users Success");
+      toast.success('Get All Roles Success')
       return res.data;
     } catch (error) {
       toast.error(error.title, { description: error.message });
@@ -20,21 +19,8 @@ export const useUserStore = create((set) => ({
     try {
       const res = await getById(params);
       set({ data: [], selectedData: res.data });
-      toast.success("Get User Success");
+      toast.success('Get Role Success')
       return res.data;
-    } catch (error) {
-      toast.error(error.title, { description: error.message });
-    }
-  },
-  create: async (params,navigation) => {
-    try {
-      const res = await createUser(params);
-      set({ data: [], selectedData: res.data });
-      toast.success("Get User Success");
-      if(navigation) {
-        navigation('base-info/users')
-      }
-      return;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }

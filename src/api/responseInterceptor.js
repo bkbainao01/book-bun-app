@@ -20,7 +20,7 @@ const onError = async (error) => {
     } else if (status === 404) {
       errorObj.title = 'Not Found'
       errorObj.message = 'Resource not found.'
-    } else if (status === 401) {
+    } else if (status === 401 || status === 403) {
       errorObj.title = 'Unauthorized'
       errorObj.message = `${error.response.data}. Please login again.`
       await useAuthStore.getState().logout()
