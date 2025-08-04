@@ -12,25 +12,57 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useState } from "react"
-
-
-
-
+import { useUserStore } from "@/stores/userStore"
+import { useRoleStore } from "@/stores/roleStore"
+import { useEffect } from "react"
+import { useNavigate, useParams  } from "react-router-dom"
+import TransferComponent from "@/components/Transfer"
+import { useCallback } from "react"
 
 export default function UserCreator({
   viewMode=true,
   isReadOnly=false
  }) {
-  const [formData, setFormData] = useState({
+  const navigation = useNavigate();
+  const { id } = useParams();
+  const userStore = useUserStore();
+  const roleStore = useRoleStore();
+  const getUserById = useUserStore(state => state.getById);
+  const getAllRoles = useRoleStore(state => state.getAll);
+  const roleList = roleStore.data;
+  const userData = userStore.selectedData;
+
+   const [formData, setFormData] = useState({
     email: '',
     password: '',
     firstname: '',
     lastname: '',
     status: true,
+    roleIds:[],
   })
+
+
+   useEffect(() => {
+    if(viewMode){
+      getUserById(id);
+      // setFormData(prevFormData => ({
+      //   ...prevFormData,
+      //   firstname: userData.firstname,
+      //   lastname: userData.lastname,
+      //   status: userData.status,
+      //   roleIds: userData.roleIds,
+      //   email: userData.email
+      // }));
+    }
+    getAllRoles();
+    }, [getUserById, viewMode, getAllRoles, id, setFormData]);
 
   const onFormDataChange = (key, value)=>{
     setFormData({...formData, [key]: value})
+  }
+
+  const onSubmit = ()=>{
+    userStore.create(formData, navigation);
   }
 
   return (
@@ -44,7 +76,7 @@ export default function UserCreator({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form className={isReadOnly ? 'readonly': ''}>
+            <form className={isReadOnly ? 'readonly': ''}  >
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -87,6 +119,12 @@ export default function UserCreator({
                     required
                     />
                 </div>
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                    <Label htmlFor="lastname">Roles</Label>
+                  </div>
+                    <TransferComponent dataList={roleList}></TransferComponent>
+                  </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="status">Status</Label>
@@ -104,7 +142,7 @@ export default function UserCreator({
             <Button variant="outline" className="button-cancel me-2">
               Cancel
             </Button>
-            <Button type="submit" className="button-save">
+            <Button type="submit" className="button-save" onClick={onSubmit}>
               Save
             </Button>
           </CardFooter>

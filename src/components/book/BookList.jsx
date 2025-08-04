@@ -24,7 +24,7 @@ import { toast } from "sonner"
 import { useBookStore } from "@/stores/bookStore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
-import TableComponent from "@/components/TableComponent"
+import TableComponent from "@/components/TableDataComponent"
 import { useNavigate } from "react-router-dom"
 
 const onEdit = (obj, navigate)=>{
