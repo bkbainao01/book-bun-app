@@ -32,7 +32,6 @@ const onNewUser = async (navigate)=>{
 }
 
 const onEdit = (value,navigate)=>{
-  console.log("🚀 ~ onEdit ~ value:", value)
   if (value?.id && navigate) {
     navigate(`/base-info/users/view/${value.id}`);
   }
@@ -47,22 +46,27 @@ const onDelete = (value)=>{
 const tableColumns = [
   {
     key: 'firstname',
+    type:'string',
     class:''
   },
   {
     key: 'lastname',
+    type:'string',
     class:''
   },
   {
     key: 'email',
+    type:'string',
     class:''
   },
   {
     key: 'roles',
+    type:'roles',
     class:''
   },
   {
     key: 'status',
+    type:'status',
     class:''
   },
 ]
@@ -70,7 +74,7 @@ const tableColumns = [
 
 export default function UserList() {
   const navigate = useNavigate();
-  const userStore = useUserStore();  // <-- reactive แล้ว
+  const userStore = useUserStore();
   const getAllBooks = useUserStore(state => state.getAll);
   const userList = userStore.data;
   useEffect(() => {
@@ -94,7 +98,7 @@ export default function UserList() {
             tableName="user-table"
             tableColumns={tableColumns}
             dataList={userList}
-            action={{ isAction:true, isEdit: true, isPrint:true, isDelete: true}}
+            action={{ isAction:true, isEdit: true, isPrint:false, isDelete: true}}
             onEdit={(value)=>onEdit(value, navigate)}
             onPrint={(value)=>onPrint(value, navigate)}
             onDelete={(value)=>onDelete(value)}

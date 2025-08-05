@@ -1,6 +1,7 @@
 import { create } from 'zustand'
-import { getAll, getById, create as createUser } from '@/services/userService';
+import { getAll, getById, create as createUser, update } from '@/services/userService';
 import { toast } from "sonner"
+import { replace } from 'react-router-dom';
 
 
 export const useUserStore = create((set) => ({
@@ -16,9 +17,9 @@ export const useUserStore = create((set) => ({
       toast.error(error.title, { description: error.message });
     }
   },
-  getById: async (params) => {
+  getById: async (id) => {
     try {
-      const res = await getById(params);
+      const res = await getById(id);
       set({ data: [], selectedData: res.data });
       toast.success("Get User Success");
       return res.data;
@@ -26,15 +27,28 @@ export const useUserStore = create((set) => ({
       toast.error(error.title, { description: error.message });
     }
   },
-  create: async (params,navigation) => {
+  create: async (params,navigate) => {
     try {
       const res = await createUser(params);
       set({ data: [], selectedData: res.data });
-      toast.success("Get User Success");
-      if(navigation) {
-        navigation('base-info/users')
+      toast.success("Create User Success");
+      if(navigate) {
+        navigate('/base-info/users',{ replace:true })
       }
       return;
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+  update: async (id, payload, navigate) => {
+    try {
+      const res = await update(id, payload);
+      set({ data: [], selectedData: res.data });
+      toast.success("Update User Success");
+      if(navigate) {
+        navigate('/base-info/users',{ replace:true })
+      }
+      return res.data;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }

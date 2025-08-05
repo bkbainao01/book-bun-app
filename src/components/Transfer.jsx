@@ -6,41 +6,92 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons"
 
+export default function Transfer({ leftListProp = [], rightListProp = [], onTransferSelected }) {
 
-
-export default function Transfer({ dataList = [] }) {
+  const [originLeftList, setOriginLeftList] = useState([]);
+  const [originRightList, setOriginRightList] = useState([]);
   const [leftList, setLeftList] = useState([])
-  const [rightList, setRightList] = useState([])
+  const [rightList, setRightList] = useState([]);
   const [selectedLeft, setSelectedLeft] = useState([])
   const [selectedRight, setSelectedRight] = useState([])
   const [searchSelectedLeft, setSearchSelectedLeft] = useState("")
   const [searchSelectedRight, setSearchSelectedRight] = useState("")
 
   useEffect(() => {
-    setLeftList(dataList)
-  }, [dataList])
+    const sorted = [...leftListProp].sort((a, b) => a.name.localeCompare(b.name));
+    setOriginLeftList(sorted);
+    setLeftList(sorted);
+  }, [leftListProp]);
+
+  useEffect(() => {
+    const sorted = [...rightListProp].sort((a, b) => a.name.localeCompare(b.name));
+    setOriginRightList(sorted);
+    setRightList(sorted);
+  }, [rightListProp]);
 
   const moveRight = () => {
-    const moveItems = leftList.filter(item => selectedLeft.includes(item.id))
-    setRightList([...rightList, ...moveItems])
-    setLeftList(leftList.filter(item => !selectedLeft.includes(item.id)))
-    setSelectedLeft([])
+    const moveItems = originLeftList.filter(item => selectedLeft.includes(item.id));
+
+    const updatedRight = [...originRightList, ...moveItems].sort((a, b) => a.name.localeCompare(b.name));
+    const updatedLeft = originLeftList.filter(item => !selectedLeft.includes(item.id)).sort((a, b) => a.name.localeCompare(b.name));
+
+    setOriginRightList(updatedRight);
+    setRightList(updatedRight);
+
+    setOriginLeftList(updatedLeft);
+    setLeftList(updatedLeft);
+
+    onTransferSelected({left:updatedLeft, right:updatedRight});
+    setSelectedLeft([]);
   }
 
   const moveLeft = () => {
-    const moveItems = rightList.filter(item => selectedRight.includes(item.id))
-    setLeftList([...leftList, ...moveItems])
-    setRightList(rightList.filter(item => !selectedRight.includes(item.id)))
-    setSelectedRight([])
+    const moveItems = originRightList.filter(item => selectedRight.includes(item.id));
+
+    const updatedLeft = [...originLeftList, ...moveItems].sort((a, b) => a.name.localeCompare(b.name));
+    const updatedRight = originRightList.filter(item => !selectedRight.includes(item.id)).sort((a, b) => a.name.localeCompare(b.name));
+
+    setOriginLeftList(updatedLeft);
+    setLeftList(updatedLeft);
+
+    setOriginRightList(updatedRight);
+    setRightList(updatedRight);
+
+    onTransferSelected({left:updatedLeft, right:updatedRight});
+    setSelectedRight([]);
   }
 
   const toggleSelection = (id, selected, setSelected) => {
-    setSelected(
-      selected.includes(id)
+    let selectedList = selected.includes(id)
         ? selected.filter(v => v !== id)
         : [...selected, id]
-    )
+    setSelected(selectedList)
+  }
+
+  const onSearch = (value, key) => {
+    const regex = new RegExp(value, 'i');
+    if (key === 'left') {
+      setSearchSelectedLeft(value);
+      const filtered = originLeftList.filter(item => regex.test(item.name));
+      setLeftList(filtered);
+    } else {
+      setSearchSelectedRight(value);
+      const filtered = originRightList.filter(item => regex.test(item.name));
+      setRightList(filtered);
+    }
+  }
+
+  const onClearInput = (key) => {
+    if (key === 'left') {
+      setSearchSelectedLeft('');
+      setLeftList(originLeftList);
+    } else {
+      setSearchSelectedRight('');
+      setRightList(originRightList);
+    }
   }
 
   return (
@@ -56,11 +107,15 @@ export default function Transfer({ dataList = [] }) {
                 placeholder="Enter Keyword"
                 required
                 value={searchSelectedLeft}
-                onChange={(e)=>setSearchSelectedLeft(e.target.value)}
+                onChange={(e)=> onSearch(e.target.value, 'left') }
                 />
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className={`x-clear-data-btn ${ searchSelectedLeft?.length ? 'active' : '' }`}
+                  onClick={() => onClearInput('left')}/>
             </div>
             <div className="transfer-list">
-            {leftList.map(item => (
+            { leftList.map(item => (
                 <label key={item.id} className="flex items-center gap-2">
                 <Checkbox
                     checked={selectedLeft.includes(item.id)}
@@ -96,8 +151,12 @@ export default function Transfer({ dataList = [] }) {
                 placeholder="Enter Keyword"
                 required
                 value={searchSelectedRight}
-                onChange={(e)=>setSearchSelectedRight(e.target.value)}
+                onChange={(e)=>onSearch(e.target.value, 'right')}
                 />
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className={`x-clear-data-btn ${ searchSelectedRight?.length ? 'active' : '' }`}
+                  onClick={() => onClearInput('right')}/>
             </div>
             <div className="transfer-list">
             {rightList.map(item => (

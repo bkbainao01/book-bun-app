@@ -17,7 +17,6 @@ import { useRoleStore } from "@/stores/roleStore"
 import { useEffect } from "react"
 import { useNavigate, useParams  } from "react-router-dom"
 import TransferComponent from "@/components/Transfer"
-import { useCallback } from "react"
 
 export default function UserCreator({
   viewMode=true,
@@ -39,30 +38,54 @@ export default function UserCreator({
     lastname: '',
     status: true,
     roleIds:[],
+    roles:[],
   })
+  const [left, setLeft] = useState([]);
+  const [right, setRight] = useState([]);
 
-
-   useEffect(() => {
-    if(viewMode){
+  useEffect(() => {
+    if (viewMode && id) {
       getUserById(id);
-      // setFormData(prevFormData => ({
-      //   ...prevFormData,
-      //   firstname: userData.firstname,
-      //   lastname: userData.lastname,
-      //   status: userData.status,
-      //   roleIds: userData.roleIds,
-      //   email: userData.email
-      // }));
     }
     getAllRoles();
-    }, [getUserById, viewMode, getAllRoles, id, setFormData]);
+  }, [viewMode, id, getUserById, getAllRoles]);
+
+  // 2. เมื่อ userData เปลี่ยน (หลังโหลด), ค่อย map เข้า form
+  useEffect(() => {
+    if (viewMode && userData?.id && roleList) {
+      const roleIds = userData.roles.map((role)=> role.id)
+      setLeft(roleList.filter((role)=> !roleIds.includes(role.id)));
+      setRight(userData.roles);
+      setFormData(prev => ({
+        ...prev,
+        firstname: userData.firstname,
+        lastname: userData.lastname,
+        status: userData.status,
+        roles: userData.roles,
+        roleIds: roleIds,
+        email: userData.email,
+      }));
+    }
+  }, [viewMode, userData, roleList]);
+
 
   const onFormDataChange = (key, value)=>{
     setFormData({...formData, [key]: value})
   }
 
   const onSubmit = ()=>{
-    userStore.create(formData, navigation);
+    if(viewMode) {
+      userStore.update(id, formData, navigation);
+    } else {
+      userStore.create(formData, navigation);
+    }
+  }
+
+  const onTransferSelected = (obj) => {
+    const roleIds = obj.right.map((x)=>x.id);
+    setFormData((prevFormData) =>({ ...prevFormData, roleIds: roleIds, roles:obj.right }));
+    setLeft(obj.left);
+    setRight(obj.right);
   }
 
   return (
@@ -86,14 +109,14 @@ export default function UserCreator({
                     placeholder="john.doe@bookbun.com"
                     required
                     value={formData.email}
-                    onChange={(e)=>onFormDataChange('email' , e.target.value)}
+                    onChange={(e)=> onFormDataChange('email' , e.target.value)}
                   />
                 </div>
                 { !viewMode && <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
                   </div>
-                  <Input id="password" type="password" required value={ formData.password } onChange={(e)=>onFormDataChange('password' , e.target.value)}/>
+                  <Input id="password" type="password" required value={ formData.password } onChange={(e)=> onFormDataChange('password' , e.target.value) }/>
                 </div>}
                 <div className="grid gap-2">
                   <Label htmlFor="firstname">Firstname</Label>
@@ -123,7 +146,7 @@ export default function UserCreator({
                     <div className="flex items-center">
                     <Label htmlFor="lastname">Roles</Label>
                   </div>
-                    <TransferComponent dataList={roleList}></TransferComponent>
+                    <TransferComponent leftListProp={left} rightListProp={right} onTransferSelected={(value)=> onTransferSelected(value)} ></TransferComponent>
                   </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">

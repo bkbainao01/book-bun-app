@@ -14,9 +14,9 @@ export async function getAll(params) {
   }
 }
 
-export async function getById(id) {
+export async function getById(id, payload) {
   try {
-    const res = await axios.get(`${userPath}/${id}`)
+    const res = await axios.get(`${userPath}/${id}`, payload)
     return res.data
   } catch (error) {
     console.error("error: ", error)
@@ -46,7 +46,7 @@ export async function update(id,payload) {
 
 export async function remove(id) {
   try {
-    const res = await axios.delete(`${userPath}/${id}`)
+    const res = await axios.delete(`${userPath}/${id}`);
     return res.data
   } catch (error) {
     console.error("error: ", error)
