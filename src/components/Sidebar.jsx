@@ -9,6 +9,8 @@ import {
   faRightFromBracket,
   faSun,
   faUsers,
+  faX,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -16,8 +18,9 @@ import { Switch } from "./ui/switch";
 import { useAuthStore } from "@/stores/authStore";
 import { useForm } from "react-hook-form"
 import { useEffect } from "react";
+import { Button } from "./ui/button";
 
-const initMenuList = [
+  const initMenuList = [
     {
       name: "Dashboard",
       route: "/dashboard",
@@ -49,11 +52,11 @@ const initMenuList = [
   ];
 
 
-  const onClickMenu = (item, navigate) => {
+  function onClickMenu (item, navigate) {
       navigate(item.route);
   };
 
-  const menuChildListElement = (childList, currentPath, navigate)=>{
+  function menuChildListElement (childList, currentPath, navigate) {
     return childList.map((child, index ) => {
       const isActive = child.route === currentPath;
       return (
@@ -65,7 +68,7 @@ const initMenuList = [
     })
   }
 
-  const menuListElement = (menuList, currentPath, navigate , isClose) => {
+  function menuListElement (menuList, currentPath, navigate , isClose) {
     return menuList.map((item, index) => {
       const isActive = item.route === currentPath;
       return (
@@ -80,7 +83,7 @@ const initMenuList = [
     })
   }
 
-  const onClickDarkModeToggle = (value , setIsDarkMode) => {
+  function onClickDarkModeToggle(value , setIsDarkMode) {
     setIsDarkMode(value);
     const element = document.getElementById("main-layout")
     if(element && value) {
@@ -92,7 +95,7 @@ const initMenuList = [
     }
   }
 
-  const setDefaultMode = (isDarkMode)=>{
+  function setDefaultMode(isDarkMode) {
     const element = document.getElementById("main-layout");
     if (element) {
       if (isDarkMode) {
@@ -103,22 +106,43 @@ const initMenuList = [
     }
   }
 
-function SidebarComponent() {
+function toggleSidebar({ setSidebarStatus ,sidebarStatus }) {
+  setSidebarStatus(sidebarStatus == 'open' ? 'close' : 'open');
+}
+
+function onCloseFullSidebar({setSidebarStatus}) {
+  setSidebarStatus('close');
+  const element = document.getElementById("sidebarEl");
+  if (element) {
+    element.classList.remove("full");
+  }
+}
+
+function SidebarComponent({
+  size = { width: 0, height: 0 },
+  sidebarStatus = '',
+  setSidebarStatus
+}) {
   const navigate = useNavigate();
   const authStore = useAuthStore();
   const [menuList, setMenuList] = useState([...initMenuList]);
-  const [isClose, setIsClose] = useState(false);
   const isDarkModeDefault = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const [isDarkMode, setIsDarkMode] = useState(isDarkModeDefault);
   const location = useLocation();
   const currentPath = location.pathname;
 
   useEffect(() => {
-    setDefaultMode(isDarkMode)
+    if(size.width <= 580) {
+      setSidebarStatus('close');
+    }
+  }, [size,setSidebarStatus]);
+
+  useEffect(() => {
+    setDefaultMode(isDarkMode);
   }, [isDarkMode]);
 
   return (
-    <div className={`sidebar ${ isClose ? 'close' : ''}`}>
+    <div className={`sidebar ${ sidebarStatus }`} id="sidebarEl">
       <div className="sidebar-box">
         <div className="header">
           <div className="logo">
@@ -130,12 +154,21 @@ function SidebarComponent() {
               <span className="desc">Book System</span>
             </div>
           </div>
-          <div className="toggle-button" onClick={()=>setIsClose(!isClose)} >
-            <FontAwesomeIcon icon={ isClose ? faCaretRight : faCaretLeft } />
-          </div>
+          {
+            size?.width > 580 && (
+              <div className="toggle-button" onClick={()=> toggleSidebar({setSidebarStatus })} >
+                <FontAwesomeIcon icon={ sidebarStatus == 'close' ? faCaretRight : faCaretLeft } />
+              </div>
+            )
+          }
+          { sidebarStatus == 'full' && (
+            <div className="" onClick={()=> onCloseFullSidebar({setSidebarStatus })} >
+              <FontAwesomeIcon icon={ faXmark }  />
+            </div>
+          ) }
         </div>
         <div className="menu-bar">
-          { menuListElement(menuList, currentPath, navigate, isClose) }
+          { menuListElement(menuList, currentPath, navigate, sidebarStatus == 'close') }
         </div>
         <div className="footer">
           <div className="footer-items">
@@ -144,12 +177,12 @@ function SidebarComponent() {
               <div className="menu-item-name">Logout</div>
             </div>
             <div className="menu-item" title={ isDarkMode ? 'Dark Mode' : 'Light Mode' }>
-              { !isClose && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
+              { !sidebarStatus == 'close' && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
               <div className="menu-item-name">{isDarkMode ? 'Dark' : 'Light'} Mode</div>
-              <div className={`menu-item-switch ${ isClose ? '':'ml-auto'}`}>
+              <div className={`menu-item-switch ${ sidebarStatus == 'close' ? '':'ml-auto'}`}>
                 <Switch className="mt-1"
                   checked={isDarkMode}
-                  onCheckedChange={(value)=>onClickDarkModeToggle(value, setIsDarkMode)}></Switch>
+                  onCheckedChange={(value)=> onClickDarkModeToggle(value, setIsDarkMode)}></Switch>
               </div>
             </div>
           </div>

@@ -54,5 +54,18 @@
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.3.4",
     "vite": "^6.3.5"
-  }
+  },
+  "description": "A modern React application built with Vite, Tailwind CSS, and a rich set of libraries for UI, state management, and routing.",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkbainao01/book-bun-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bkbainao01/book-bun-app/issues"
+  },
+  "homepage": "https://github.com/bkbainao01/book-bun-app#readme"
 }

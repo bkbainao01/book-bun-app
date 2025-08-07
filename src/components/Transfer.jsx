@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons"
+import { faChevronLeft, faChevronRight, faCircleXmark } from "@fortawesome/free-solid-svg-icons"
 
 export default function Transfer({ leftListProp = [], rightListProp = [], onTransferSelected }) {
 
@@ -133,10 +133,10 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
       {/* Buttons */}
       <div className="transfer-icons">
         <Button onClick={moveRight} disabled={selectedLeft.length === 0}>
-          →
+          <FontAwesomeIcon icon={faChevronRight}></FontAwesomeIcon>
         </Button>
         <Button onClick={moveLeft} disabled={selectedRight.length === 0}>
-          ←
+          <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
         </Button>
       </div>
 

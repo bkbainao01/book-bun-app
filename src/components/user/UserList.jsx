@@ -1,14 +1,4 @@
 import { useEffect } from "react"
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -20,27 +10,25 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useNavigate } from "react-router-dom"
-import { Badge } from "@/components/ui/badge"
-import { toast } from "sonner"
 import { useUserStore } from "@/stores/userStore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import TableDataComponent from "@/components/TableDataComponent"
 
-const onNewUser = async (navigate)=>{
+function onNewUser(navigate){
   navigate('/base-info/users/create/')
 }
 
-const onEdit = (value,navigate)=>{
+function onEdit(value,navigate){
   if (value?.id && navigate) {
     navigate(`/base-info/users/view/${value.id}`);
   }
 }
-const onPrint = (value)=>{
-  console.log("parent ==> OnPrint: ", value)
+function onPrint(value) {
+  console.log("parent = OnPrint: ", value)
 }
-const onDelete = (value)=>{
-  console.log("parent ==> OnDelete: ",value)
+function onDelete(value) {
+  console.log("parent = OnDelete: ",value)
 }
 
 const tableColumns = [

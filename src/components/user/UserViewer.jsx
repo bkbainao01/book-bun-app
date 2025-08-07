@@ -18,10 +18,27 @@ import { useEffect } from "react"
 import { useNavigate, useParams  } from "react-router-dom"
 import TransferComponent from "@/components/Transfer"
 
-export default function UserCreator({
-  viewMode=true,
-  isReadOnly=false
- }) {
+
+function onFormDataChange ({key, value, setFormData, formData}) {
+  setFormData({...formData, [key]: value})
+}
+
+function onSubmit({ viewMode, userStore, id, formData, navigation }) {
+  if(viewMode) {
+    userStore.update(id, formData, navigation);
+  } else {
+    userStore.create(formData, navigation);
+  }
+}
+function onTransferSelected({obj, setFormData, setLeft,setRight}) {
+  const roleIds = obj.right.map((x)=>x.id);
+  setFormData((prevFormData) =>({ ...prevFormData, roleIds: roleIds, roles:obj.right }));
+  setLeft(obj.left);
+  setRight(obj.right);
+}
+
+export default function UserCreator({ viewMode=true, isReadOnly=false}) {
+  // vars
   const navigation = useNavigate();
   const { id } = useParams();
   const userStore = useUserStore();
@@ -30,7 +47,8 @@ export default function UserCreator({
   const getAllRoles = useRoleStore(state => state.getAll);
   const roleList = roleStore.data;
   const userData = userStore.selectedData;
-
+  const [left, setLeft] = useState([]);
+  const [right, setRight] = useState([]);
    const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -40,9 +58,9 @@ export default function UserCreator({
     roleIds:[],
     roles:[],
   })
-  const [left, setLeft] = useState([]);
-  const [right, setRight] = useState([]);
 
+  // useEffect
+  // get all data
   useEffect(() => {
     if (viewMode && id) {
       getUserById(id);
@@ -53,7 +71,7 @@ export default function UserCreator({
   // 2. เมื่อ userData เปลี่ยน (หลังโหลด), ค่อย map เข้า form
   useEffect(() => {
     if (viewMode && userData?.id && roleList) {
-      const roleIds = userData.roles.map((role)=> role.id)
+      const roleIds = userData?.roles?.map((role)=> role.id)
       setLeft(roleList.filter((role)=> !roleIds.includes(role.id)));
       setRight(userData.roles);
       setFormData(prev => ({
@@ -69,24 +87,6 @@ export default function UserCreator({
   }, [viewMode, userData, roleList]);
 
 
-  const onFormDataChange = (key, value)=>{
-    setFormData({...formData, [key]: value})
-  }
-
-  const onSubmit = ()=>{
-    if(viewMode) {
-      userStore.update(id, formData, navigation);
-    } else {
-      userStore.create(formData, navigation);
-    }
-  }
-
-  const onTransferSelected = (obj) => {
-    const roleIds = obj.right.map((x)=>x.id);
-    setFormData((prevFormData) =>({ ...prevFormData, roleIds: roleIds, roles:obj.right }));
-    setLeft(obj.left);
-    setRight(obj.right);
-  }
 
   return (
     <>
@@ -100,74 +100,99 @@ export default function UserCreator({
           </CardHeader>
           <CardContent>
             <form className={isReadOnly ? 'readonly': ''}  >
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="john.doe@bookbun.com"
-                    required
-                    value={formData.email}
-                    onChange={(e)=> onFormDataChange('email' , e.target.value)}
-                  />
+            <div className="grid grid-cols-12 gap-5 ">
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="email" className={'form-label'}>Email</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="john.doe@bookbun.com"
+                  required
+                  value={formData.email}
+                  onChange={(e)=> onFormDataChange({ key:'email' , value: e.target.value, setFormData, formData})}
+                />
+              </div>
+              { !viewMode && (<>
+                <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                  <Label htmlFor="password" className={'form-label'}>Password</Label>
                 </div>
-                { !viewMode && <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                  </div>
-                  <Input id="password" type="password" required value={ formData.password } onChange={(e)=> onFormDataChange('password' , e.target.value) }/>
-                </div>}
-                <div className="grid gap-2">
-                  <Label htmlFor="firstname">Firstname</Label>
+                <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                   <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={ formData.password }
+                    onChange={
+                      (e)=> onFormDataChange(
+                        { key:'password' , value: e.target.value, setFormData, formData}
+                        )
+                    }/>
+                </div>
+              </>
+              )}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="firstname" className={'form-label'}>Firstname</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10">
+                <Input
                     id="firstname"
                     type="firstname"
                     placeholder="John"
                     value={formData.firstname}
-                    onChange={(e)=>onFormDataChange('firstname' , e.target.value)}
+                    onChange={(e)=>onFormDataChange({ key:'firstname' , value: e.target.value, setFormData, formData })}
                     required
                   />
-                </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="lastname">Lastname</Label>
-                  </div>
-                  <Input
+              </div>
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="lastname" className={'form-label'}>Lastname</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10">
+                <Input
                     id="lastname"
                     type="text"
                     placeholder="Doe"
                     value={formData.lastname}
-                    onChange={(e)=>onFormDataChange('lastname' , e.target.value)}
+                    onChange={(e)=>onFormDataChange({ key:'lastname' , value:e.target.value, setFormData, formData})}
                     required
                     />
-                </div>
-                  <div className="grid gap-2">
-                    <div className="flex items-center">
-                    <Label htmlFor="lastname">Roles</Label>
-                  </div>
-                    <TransferComponent leftListProp={left} rightListProp={right} onTransferSelected={(value)=> onTransferSelected(value)} ></TransferComponent>
-                  </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="status">Status</Label>
-                  </div>
+              </div>
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="lastname" className={'form-label'}>Roles</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10">
+                <TransferComponent
+                  leftListProp={left}
+                  rightListProp={right}
+                  onTransferSelected={
+                    (obj)=>onTransferSelected({obj, setFormData, setLeft,setRight})
+                  }
+                />
+              </div>
+              <div className="col-span-12 self-center md:col-span-3 lg:col-span-2 ">
+                <Label htmlFor="status" className={'form-label'}>Status</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                   <Switch
                     id="status"
-                    className={'size-xl'}
+                    className={'size-xl mt-1'}
                     checked={formData.status}
-                    onCheckedChange={(checked)=>onFormDataChange('status' , checked)}/>
-                </div>
+                    onCheckedChange={(checked)=>onFormDataChange({key:'status' ,value: checked, setFormData, formData})}/>
               </div>
+            </div>
             </form>
           </CardContent>
           <CardFooter className="justify-end">
             <Button variant="outline" className="button-cancel me-2">
               Cancel
             </Button>
-            <Button type="submit" className="button-save" onClick={onSubmit}>
-              Save
-            </Button>
+            <Button
+              type="submit"
+              className="button-save"
+              onClick={()=> onSubmit({ viewMode, userStore, id, formData, navigation })}>
+                Save
+              </Button>
           </CardFooter>
         </Card>
       </div>

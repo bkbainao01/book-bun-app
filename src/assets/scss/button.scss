@@ -1,5 +1,5 @@
 @use './variables.scss' as *;
-
+// Primary Button-----------------------------------------------------------------------
 button {
     transition: background 0.3s ease;
     cursor: pointer;
@@ -41,9 +41,14 @@ button {
     color: aliceblue;
 }
 
+.visible-pwd-button {
+    position: relative;
+    top: 10%;
+}
 
-// button role switch
 
+// Switch Button-----------------------------------------------------------------------
+// size-normal
 button[role="switch"] {
     width: 26px;
     height: 15px;
@@ -52,25 +57,23 @@ button[role="switch"] {
     position: relative;
     transition: background-color 0.3s ease;
     border: 2px solid transparent;
-}
 
-button[role="switch"]>span {
-    position: absolute;
-    left: 2px;
-    top: 1px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: white;
-    transition: transform 0.3s ease;
-}
+    &[aria-checked="true"] {
+        background-color: $color-primary;
+    }
 
-button[aria-checked="true"] {
-    background-color: $color-primary;
-    /* สีหลักของคุณ */
+    span {
+        position: absolute;
+        left: 2px;
+        top: 1px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: white;
+        transition: transform 0.3s ease;
+    }
 }
-// switch big size
-
+// size-xl
 button[role="switch"].size-xl {
     width: 48px;
     height: 26px;
@@ -79,21 +82,21 @@ button[role="switch"].size-xl {
     position: relative;
     transition: background-color 0.3s ease;
     border: 2px solid transparent;
+
+    &[aria-checked="true"] {
+        background-color: $color-primary;
+    }
+
+    span {
+        position: absolute;
+        left: 2px;
+        top: 1px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: white;
+        transition: transform 0.3s ease;
+    }
 }
 
-button[role="switch"].size-xl>span {
-    position: absolute;
-    left: 2px;
-    top: 1px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: white;
-    transition: transform 0.3s ease;
-}
 
-button.visible-pwd-button {
-    position: relative;
-    top: 10%;
-    
-}

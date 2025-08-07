@@ -1,14 +1,18 @@
 .transfer {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .transfer-right,
 .transfer-left {
+    max-width: 150px;
+    min-width: 200px;
     display: block;
     height: 255px;
     padding: 0px;
     border-color: #525253;
+    margin: 10px 0px;
 
     .transfer-title {
         border-radius: 0.75rem 0.75rem 0 0;
@@ -46,10 +50,18 @@
 
 .transfer-icons {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
     padding: 10px;
 }
+
+ @media screen and (max-width: 689px) {
+   .transfer-icons {
+        max-width: 150px;
+        min-width: 200px;
+        align-items: center;
+    }
+  }
 
 
 

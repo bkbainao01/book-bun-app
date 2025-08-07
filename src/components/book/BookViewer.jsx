@@ -13,13 +13,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useBookStore } from "@/stores/bookStore"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function BookCreator({
   viewMode = true,
   isReadOnly = false,
 }) {
   const bookStore = useBookStore();
+  const getById = useBookStore((state)=> state.getById);
 
   const initFormData = {
       name: '',
@@ -28,7 +29,7 @@ export default function BookCreator({
       status: true,
     }
 
-  const bookForm = useForm({defaultValues: initFormData})
+  const bookForm = useForm({ defaultValues: initFormData })
   // in bookForm have { register, handleSubmit,setValue,watch}
 
   const formValues = bookForm.watch()
@@ -95,6 +96,7 @@ export default function BookCreator({
                 <Label htmlFor="status">Status</Label>
                 <Switch
                   id="status"
+                  className={'size-xl'}
                   checked={formValues.status}
                   onCheckedChange={(val) => bookForm.setValue("status", val)}
                   disabled={isReadOnly}
@@ -102,7 +104,6 @@ export default function BookCreator({
               </div>
             </div>
           </form>
-          <pre>{JSON.stringify(formValues, null, 2)}</pre>
         </CardContent>
 
         <CardFooter>

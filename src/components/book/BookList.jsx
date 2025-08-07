@@ -148,7 +148,7 @@ export default function BookList() {
             <CardTitle className={'text-start header'}>Books</CardTitle>
             <CardDescription className={'text-start text-muted'}  >Books Information</CardDescription>
             <CardAction onClick={()=>onNewBook(navigate) }>
-              <Button className="button-new"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New User</Button>
+              <Button className="button-new"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New Book</Button>
             </CardAction>
           </CardHeader>
           <CardContent>

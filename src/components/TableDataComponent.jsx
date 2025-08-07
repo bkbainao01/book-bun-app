@@ -41,7 +41,7 @@ function capitalizeLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const dynamicColList = (col) => {
+function dynamicColList(col) {
   return col.map((field) => ({
     accessorKey: field.key,
     header: field.title || capitalizeLetter(field.key),
@@ -64,11 +64,14 @@ const dynamicColList = (col) => {
     },
   }));
 };
-const filterInput = (filters,table) => {
-  return filters.map(filter => {
+
+function filterInput (filters,table) {
+  return filters.map((filter,fIndex) => {
     switch(filter.type){
       case 'string':
         return <Input
+          key={filter.key}
+          id={`${filter.key}-${fIndex}`}
           placeholder={filter.placeholder}
           value={table.getColumn(filter.key)?.getFilterValue() ?? ""}
           onChange={(event) =>
@@ -80,7 +83,7 @@ const filterInput = (filters,table) => {
   });
 }
 
-const filterPart = (filters,table) => {
+function filterPart (filters,table) {
   return (
   <>
       <div className="flex flex-wrap items-center py-4">

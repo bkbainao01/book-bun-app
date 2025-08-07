@@ -2,6 +2,7 @@
 // light mode || default mode
 input[data-slot="input"],
 input:-webkit-autofill {
+        padding: 10px 14px;
         background-color: #e8f0fe !important;
         color: #343434;
         border:#6b6b6b 1px solid;
@@ -39,12 +40,12 @@ input:-webkit-autofill {
 }
 
 
-// for dark mode
+// dark mode
 .dark {
     input[data-slot="input"],
     input:-webkit-autofill {
         background-color: #444 !important;
-        color: #f5f5f5;
+        color: #fff;
         border:#666;
         &:focus-visible {
             box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
