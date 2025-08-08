@@ -83,6 +83,8 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
         roleIds: roleIds,
         email: userData.email,
       }));
+    }else if (roleList) {
+      setLeft(roleList);
     }
   }, [viewMode, userData, roleList]);
 
@@ -183,7 +185,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
             </div>
             </form>
           </CardContent>
-          <CardFooter className="justify-end">
+          <CardFooter className="md:justify-end px-0">
             <Button variant="outline" className="button-cancel me-2">
               Cancel
             </Button>

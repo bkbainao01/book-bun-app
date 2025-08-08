@@ -7,10 +7,9 @@ import { toast } from "sonner";
 
 function setFullSidebar(setSidebarStatus){
   const element = document.getElementById('sidebarEl');
-  if(element){
-    const className = element.className
-    element.classList.add("full");
-    setSidebarStatus('full')
+  setSidebarStatus('full');
+  if(element && element.classList.contains("close")){
+    element.classList.replace("close","full");
   }
 }
 
@@ -25,7 +24,6 @@ function NavbarComponent({
 
   return (
     <div className='navbar py-3 px-3'>
-      { sidebarStatus }
       { (size.width < 416) && (
         <Button variant={'outline'} className={'self-center'} id="sidebarBarBtn" onClick={()=>setFullSidebar(setSidebarStatus)} >
           <FontAwesomeIcon icon={faBars}></FontAwesomeIcon>

@@ -1,5 +1,6 @@
 @use './variables.scss' as *;
 // light mode || default mode
+input,
 input[data-slot="input"],
 input:-webkit-autofill {
         padding: 10px 14px;

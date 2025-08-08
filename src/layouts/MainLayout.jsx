@@ -24,6 +24,7 @@ function MainLayout() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+
   return (
     <div className="main-layout" id="main-layout">
       <SidebarComponent size={size} sidebarStatus={sidebarStatus} setSidebarStatus={setSidebarStatus} />

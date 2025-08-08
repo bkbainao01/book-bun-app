@@ -107,14 +107,18 @@ import { Button } from "./ui/button";
   }
 
 function toggleSidebar({ setSidebarStatus ,sidebarStatus }) {
-  setSidebarStatus(sidebarStatus == 'open' ? 'close' : 'open');
+  setSidebarStatus(sidebarStatus == 'open' ? 'minimize' : 'open');
 }
 
-function onCloseFullSidebar({setSidebarStatus}) {
+function onCloseFullSidebar({setSidebarStatus , size}) {
   setSidebarStatus('close');
   const element = document.getElementById("sidebarEl");
-  if (element) {
-    element.classList.remove("full");
+  if (element && size.width < 416) {
+    element.classList.replace("full","close");
+  } else if (element && size.width <= 580) {
+    element.classList.replace("full","minimize");
+  }  else if (element && size.width > 580) {
+    element.classList.replace("full","open");
   }
 }
 
@@ -132,10 +136,31 @@ function SidebarComponent({
   const currentPath = location.pathname;
 
   useEffect(() => {
-    if(size.width <= 580) {
-      setSidebarStatus('close');
+    const element = document.getElementById('sidebarEl');
+    if(element && size.width < 416){
+      if(element.classList.contains('minimize') ) {
+        element.classList.replace('minimize', 'close')
+      }
+    } else if(size.width <= 580) {
+      setSidebarStatus('minimize');
+      if(element.classList.contains('open') ) {
+        element.classList.replace('open', 'minimize')
+      } else if(element.classList.contains('close')){
+        element.classList.replace('close', 'minimize')
+      } else if(element.classList.contains('full')){
+        element.classList.replace('full', 'minimize')
+      }
+    } else if(size.width > 580) {
+      setSidebarStatus('open');
+      if(element.classList.contains('close') ) {
+        element.classList.replace('close', 'open')
+      } else if(element.classList.contains('minimize')){
+        element.classList.replace('minimize', 'open')
+      } else if(element.classList.contains('full')){
+        element.classList.replace('full', 'open')
+      }
     }
-  }, [size,setSidebarStatus]);
+}, [size,setSidebarStatus]);
 
   useEffect(() => {
     setDefaultMode(isDarkMode);
@@ -156,19 +181,19 @@ function SidebarComponent({
           </div>
           {
             size?.width > 580 && (
-              <div className="toggle-button" onClick={()=> toggleSidebar({setSidebarStatus })} >
-                <FontAwesomeIcon icon={ sidebarStatus == 'close' ? faCaretRight : faCaretLeft } />
+              <div className="toggle-button" onClick={()=> toggleSidebar({setSidebarStatus, sidebarStatus})} >
+                <FontAwesomeIcon icon={ sidebarStatus == 'minimize' ? faCaretRight : faCaretLeft } />
               </div>
             )
           }
           { sidebarStatus == 'full' && (
-            <div className="" onClick={()=> onCloseFullSidebar({setSidebarStatus })} >
+            <div className="" onClick={()=> onCloseFullSidebar({setSidebarStatus, size})} >
               <FontAwesomeIcon icon={ faXmark }  />
             </div>
           ) }
         </div>
         <div className="menu-bar">
-          { menuListElement(menuList, currentPath, navigate, sidebarStatus == 'close') }
+          { menuListElement(menuList, currentPath, navigate, sidebarStatus == 'minimize') }
         </div>
         <div className="footer">
           <div className="footer-items">
@@ -177,10 +202,11 @@ function SidebarComponent({
               <div className="menu-item-name">Logout</div>
             </div>
             <div className="menu-item" title={ isDarkMode ? 'Dark Mode' : 'Light Mode' }>
-              { !sidebarStatus == 'close' && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
+              { !sidebarStatus == 'minimize' && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
               <div className="menu-item-name">{isDarkMode ? 'Dark' : 'Light'} Mode</div>
-              <div className={`menu-item-switch ${ sidebarStatus == 'close' ? '':'ml-auto'}`}>
-                <Switch className="mt-1"
+              <div className={`menu-item-switch ${ sidebarStatus == 'minimize' ? '':'ml-auto'}`}>
+                <Switch
+                  className="mt-1"
                   checked={isDarkMode}
                   onCheckedChange={(value)=> onClickDarkModeToggle(value, setIsDarkMode)}></Switch>
               </div>

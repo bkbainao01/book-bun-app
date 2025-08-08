@@ -8,6 +8,42 @@ import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight, faCircleXmark } from "@fortawesome/free-solid-svg-icons"
+import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core"
+
+function DraggableItem({ item, children }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: item.id,
+    data: { item }
+  })
+
+  const style = {
+    transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
+    cursor: "grab"
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  )
+}
+
+function DroppableZone({ id, children }) {
+  const { setNodeRef, isOver } = useDroppable({ id })
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        backgroundColor: isOver ? "#e0ffe0" : "transparent",
+        minHeight: "50px"
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
+
 
 export default function Transfer({ leftListProp = [], rightListProp = [], onTransferSelected }) {
 
@@ -19,6 +55,7 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
   const [selectedRight, setSelectedRight] = useState([])
   const [searchSelectedLeft, setSearchSelectedLeft] = useState("")
   const [searchSelectedRight, setSearchSelectedRight] = useState("")
+
 
   useEffect(() => {
     const sorted = [...leftListProp].sort((a, b) => a.name.localeCompare(b.name));
@@ -94,85 +131,116 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
     }
   }
 
+  const handleDragEnd = (event) => {
+    const { over, active } = event
+    if (!over) return
+
+    const draggedItem = active.data.current.item
+    const fromLeft = originLeftList.some(i => i.id === draggedItem.id)
+    const fromRight = originRightList.some(i => i.id === draggedItem.id)
+
+    if (over.id === "left" && fromRight) {
+      // เรียกฟังก์ชันเดิม moveLeft
+      setSelectedRight([draggedItem.id])
+      moveLeft()
+    }
+
+    if (over.id === "right" && fromLeft) {
+      // เรียกฟังก์ชันเดิม moveRight
+      setSelectedLeft([draggedItem.id])
+      moveRight()
+    }
+  }
+
   return (
-    <div className="transfer">
-      {/* Left list */}
-      <Card className="transfer-left" >
-        <div className="transfer-title">Available</div>
-        <div className="transfer-box">
-            <div className="transfer-search">
-                <Input
-                id="available"
-                type="text"
-                placeholder="Enter Keyword"
-                required
-                value={searchSelectedLeft}
-                onChange={(e)=> onSearch(e.target.value, 'left') }
-                />
-                <FontAwesomeIcon
-                  icon={faCircleXmark}
-                  className={`x-clear-data-btn ${ searchSelectedLeft?.length ? 'active' : '' }`}
-                  onClick={() => onClearInput('left')}/>
-            </div>
-            <div className="transfer-list">
-            { leftList.map(item => (
-                <label key={item.id} className="flex items-center gap-2">
-                <Checkbox
-                    checked={selectedLeft.includes(item.id)}
-                    onCheckedChange={() =>
-                        toggleSelection(item.id, selectedLeft, setSelectedLeft)
-                    }
-                />
-                {item.name}
-                </label>
-            ))}
-            </div>
-        </div>
-      </Card>
+    <DndContext onDragEnd={handleDragEnd}>
+      <div className="transfer">
+        {/* Left list */}
+        <Card className="transfer-left" >
+          <div className="transfer-title">Available</div>
+          <div className="transfer-box">
+              <div className="transfer-search">
+                  <Input
+                  id="available"
+                  type="text"
+                  placeholder="Enter Keyword"
+                  required
+                  value={searchSelectedLeft}
+                  onChange={(e)=> onSearch(e.target.value, 'left') }
+                  />
+                  <FontAwesomeIcon
+                    icon={faCircleXmark}
+                    className={`x-clear-data-btn ${ searchSelectedLeft?.length ? 'active' : '' }`}
+                    onClick={() => onClearInput('left')}/>
+              </div>
+              <div className="transfer-list">
+                <DroppableZone id="left">
+                  { leftList.map(item => (
+                    <DraggableItem key={item.id} item={item}>
+                      <label key={item.id} className="flex items-center gap-2">
+                      <Checkbox
+                          checked={selectedLeft.includes(item.id)}
+                          onCheckedChange={() =>
+                              toggleSelection(item.id, selectedLeft, setSelectedLeft)
+                          }
+                      />
+                      {item.name}
+                      </label>
+                    </DraggableItem>
+                  ))}
+                </DroppableZone>
+              </div>
+          </div>
+        </Card>
 
-      {/* Buttons */}
-      <div className="transfer-icons">
-        <Button onClick={moveRight} disabled={selectedLeft.length === 0}>
-          <FontAwesomeIcon icon={faChevronRight}></FontAwesomeIcon>
-        </Button>
-        <Button onClick={moveLeft} disabled={selectedRight.length === 0}>
-          <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
-        </Button>
+        {/* Buttons */}
+        <div className="transfer-icons">
+          <Button onClick={moveRight} disabled={selectedLeft.length === 0}>
+            <FontAwesomeIcon icon={faChevronRight}></FontAwesomeIcon>
+          </Button>
+          <Button onClick={moveLeft} disabled={selectedRight.length === 0}>
+            <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
+          </Button>
+        </div>
+
+        {/* Right list */}
+        <Card className="transfer-right">
+          <div className="transfer-title">Selected</div>
+          <div className="transfer-box">
+              <div className="transfer-search">
+                  <Input
+                  id="selected"
+                  type="text"
+                  placeholder="Enter Keyword"
+                  required
+                  value={searchSelectedRight}
+                  onChange={(e)=>onSearch(e.target.value, 'right')}
+                  />
+                  <FontAwesomeIcon
+                    icon={faCircleXmark}
+                    className={`x-clear-data-btn ${ searchSelectedRight?.length ? 'active' : '' }`}
+                    onClick={() => onClearInput('right')}/>
+              </div>
+              <div className="transfer-list">
+                <DroppableZone id="right">
+                  {rightList.map(item => (
+                    <DraggableItem key={item.id} item={item}>
+                      <label key={item.id} className="flex items-center gap-2">
+                      <Checkbox
+                          checked={selectedRight.includes(item.id)}
+                          onCheckedChange={() =>
+                          toggleSelection(item.id, selectedRight, setSelectedRight)
+                          }
+                      />
+                      {item.name}
+                      </label>
+                    </DraggableItem>
+                  ))}
+                </DroppableZone>
+              </div>
+          </div>
+        </Card>
       </div>
-
-      {/* Right list */}
-      <Card className="transfer-right">
-        <div className="transfer-title">Selected</div>
-        <div className="transfer-box">
-            <div className="transfer-search">
-                <Input
-                id="selected"
-                type="text"
-                placeholder="Enter Keyword"
-                required
-                value={searchSelectedRight}
-                onChange={(e)=>onSearch(e.target.value, 'right')}
-                />
-                <FontAwesomeIcon
-                  icon={faCircleXmark}
-                  className={`x-clear-data-btn ${ searchSelectedRight?.length ? 'active' : '' }`}
-                  onClick={() => onClearInput('right')}/>
-            </div>
-            <div className="transfer-list">
-            {rightList.map(item => (
-                <label key={item.id} className="flex items-center gap-2">
-                <Checkbox
-                    checked={selectedRight.includes(item.id)}
-                    onCheckedChange={() =>
-                    toggleSelection(item.id, selectedRight, setSelectedRight)
-                    }
-                />
-                {item.name}
-                </label>
-            ))}
-            </div>
-        </div>
-      </Card>
-    </div>
+    </DndContext>
   )
 }
