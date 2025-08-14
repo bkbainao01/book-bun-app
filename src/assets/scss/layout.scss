@@ -31,7 +31,7 @@ body {
     z-index: 100;
     position: fixed;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    background-color: $sidebar-color;
+    background-color: #333;
     transition: width 0.3s ease;
     .sidebar-box {
       padding: 5px;
@@ -74,7 +74,7 @@ body {
           transform: translateY(-50%);
           height: 25px;
           width: 25px;
-          background-color: $header-color;
+          background-color: #AED274;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -82,7 +82,7 @@ body {
           box-shadow: 0 4px 6px #444;
           transition: width 0.3s ease, left 0.3s ease;
           &:hover {
-            background-color: color.adjust($header-color, $lightness: -10%);
+            background-color: color.adjust(#AED274, $lightness: -10%);
           }
         }
         .close-sidebar-full-button {
@@ -90,7 +90,7 @@ body {
         }
       }
       .menu-bar {
-        height: calc(100vh - 142px);
+        height: calc(100vh - 155px);
         padding: 5px;
         color: #ffffff;
         overflow-y: auto;
@@ -162,7 +162,7 @@ body {
       top: 0;
       position: sticky;
       height: 60px;
-      background-color: $navbar-color;
+      background-color: #E8717E;
     }
 
     .content-section {
@@ -223,6 +223,11 @@ body {
     display: none;
     width: 0;
   }
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
 }
 
 

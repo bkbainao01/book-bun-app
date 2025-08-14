@@ -17,6 +17,7 @@ import { useRoleStore } from "@/stores/roleStore"
 import { useEffect } from "react"
 import { useNavigate, useParams  } from "react-router-dom"
 import TransferComponent from "@/components/Transfer"
+import { useTranslation , Trans } from "react-i18next"
 
 
 function onFormDataChange ({key, value, setFormData, formData}) {
@@ -39,6 +40,7 @@ function onTransferSelected({obj, setFormData, setLeft,setRight}) {
 
 export default function UserCreator({ viewMode=true, isReadOnly=false}) {
   // vars
+  const { t } = useTranslation();
   const navigation = useNavigate();
   const { id } = useParams();
   const userStore = useUserStore();
@@ -72,7 +74,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
   useEffect(() => {
     if (viewMode && userData?.id && roleList) {
       const roleIds = userData?.roles?.map((role)=> role.id)
-      setLeft(roleList.filter((role)=> !roleIds.includes(role.id)));
+      setLeft(roleList.filter((role)=> !roleIds?.includes(role.id)));
       setRight(userData.roles);
       setFormData(prev => ({
         ...prev,
@@ -104,7 +106,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
             <form className={isReadOnly ? 'readonly': ''}  >
             <div className="grid grid-cols-12 gap-5 ">
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                <Label htmlFor="email" className={'form-label'}>Email</Label>
+                <Label htmlFor="email" className={'form-label'}>{ t('form.email') }</Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                 <Input
@@ -118,7 +120,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
               </div>
               { !viewMode && (<>
                 <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                  <Label htmlFor="password" className={'form-label'}>Password</Label>
+                  <Label htmlFor="password" className={'form-label'}>{ t('form.password') }</Label>
                 </div>
                 <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                   <Input
@@ -135,7 +137,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
               </>
               )}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                <Label htmlFor="firstname" className={'form-label'}>Firstname</Label>
+                <Label htmlFor="firstname" className={'form-label'}>{ t('form.firstname') }</Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
                 <Input
@@ -148,7 +150,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
                   />
               </div>
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                <Label htmlFor="lastname" className={'form-label'}>Lastname</Label>
+                <Label htmlFor="lastname" className={'form-label'}>{ t('form.lastname') }</Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
                 <Input
@@ -161,7 +163,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
                     />
               </div>
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                <Label htmlFor="lastname" className={'form-label'}>Roles</Label>
+                <Label htmlFor="lastname" className={'form-label'}>{ t('form.roles') }</Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
                 <TransferComponent
@@ -173,7 +175,7 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
                 />
               </div>
               <div className="col-span-12 self-center md:col-span-3 lg:col-span-2 ">
-                <Label htmlFor="status" className={'form-label'}>Status</Label>
+                <Label htmlFor="status" className={'form-label'}>{ t('form.status') }</Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                   <Switch
@@ -187,13 +189,13 @@ export default function UserCreator({ viewMode=true, isReadOnly=false}) {
           </CardContent>
           <CardFooter className="md:justify-end px-0">
             <Button variant="outline" className="button-cancel me-2">
-              Cancel
+              { t('button.cancel') }
             </Button>
             <Button
               type="submit"
               className="button-save"
               onClick={()=> onSubmit({ viewMode, userStore, id, formData, navigation })}>
-                Save
+                { t('button.save') }
               </Button>
           </CardFooter>
         </Card>

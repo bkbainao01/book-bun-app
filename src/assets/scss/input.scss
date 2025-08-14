@@ -2,7 +2,8 @@
 // light mode || default mode
 input,
 input[data-slot="input"],
-input:-webkit-autofill {
+input:-webkit-autofill,
+textarea {
         padding: 10px 14px;
         background-color: #e8f0fe !important;
         color: #343434;
@@ -40,11 +41,26 @@ input:-webkit-autofill {
     }
 }
 
+// integer input (Remove Arrows/Spinners)
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 
 // dark mode
 .dark {
     input[data-slot="input"],
-    input:-webkit-autofill {
+    input:-webkit-autofill,
+    textarea {
         background-color: #444 !important;
         color: #fff;
         border:#666;

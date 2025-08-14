@@ -85,7 +85,7 @@ import { Button } from "./ui/button";
 
   function onClickDarkModeToggle(value , setIsDarkMode) {
     setIsDarkMode(value);
-    const element = document.getElementById("main-layout")
+    const element = document.getElementById("root")
     if(element && value) {
       element.classList.add("dark");
     } else if(element && !value) {
@@ -96,7 +96,7 @@ import { Button } from "./ui/button";
   }
 
   function setDefaultMode(isDarkMode) {
-    const element = document.getElementById("main-layout");
+    const element = document.getElementById("root");
     if (element) {
       if (isDarkMode) {
         element.classList.add("dark");

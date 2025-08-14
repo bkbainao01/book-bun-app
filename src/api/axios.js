@@ -3,7 +3,7 @@ import requestInterceptor from './requestInterceptor'
 import responseInterceptor from './responseInterceptor'
 import { config } from '../config/config'
 
-const baseURL = config.baseUrl
+const baseURL = config.baseUrl;
 
 const api = axios.create({
   baseURL: baseURL,

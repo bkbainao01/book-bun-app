@@ -8,69 +8,22 @@ import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight, faCircleXmark } from "@fortawesome/free-solid-svg-icons"
-import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core"
-
-function DraggableItem({ item, children }) {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: item.id,
-    data: { item }
-  })
-
-  const style = {
-    transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined,
-    cursor: "grab"
-  }
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  )
-}
-
-function DroppableZone({ id, children }) {
-  const { setNodeRef, isOver } = useDroppable({ id })
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        backgroundColor: isOver ? "#e0ffe0" : "transparent",
-        minHeight: "50px"
-      }}
-    >
-      {children}
-    </div>
-  )
-}
+import { useTranslation } from "react-i18next"
 
 
 
-export default function Transfer({ leftListProp = [], rightListProp = [], onTransferSelected }) {
-
-  const [originLeftList, setOriginLeftList] = useState([]);
-  const [originRightList, setOriginRightList] = useState([]);
-  const [leftList, setLeftList] = useState([])
-  const [rightList, setRightList] = useState([]);
-  const [selectedLeft, setSelectedLeft] = useState([])
-  const [selectedRight, setSelectedRight] = useState([])
-  const [searchSelectedLeft, setSearchSelectedLeft] = useState("")
-  const [searchSelectedRight, setSearchSelectedRight] = useState("")
-
-
-  useEffect(() => {
-    const sorted = [...leftListProp].sort((a, b) => a.name.localeCompare(b.name));
-    setOriginLeftList(sorted);
-    setLeftList(sorted);
-  }, [leftListProp]);
-
-  useEffect(() => {
-    const sorted = [...rightListProp].sort((a, b) => a.name.localeCompare(b.name));
-    setOriginRightList(sorted);
-    setRightList(sorted);
-  }, [rightListProp]);
-
-  const moveRight = () => {
-    const moveItems = originLeftList.filter(item => selectedLeft.includes(item.id));
+function moveRight({
+  originLeftList,
+  setLeftList,
+  selectedLeft,
+  setOriginLeftList,
+  originRightList,
+  setRightList,
+  setOriginRightList,
+  setSelectedLeft,
+  onTransferSelected
+}) {
+    const moveItems = originLeftList.filter(item => selectedLeft?.includes(item.id));
 
     const updatedRight = [...originRightList, ...moveItems].sort((a, b) => a.name.localeCompare(b.name));
     const updatedLeft = originLeftList.filter(item => !selectedLeft.includes(item.id)).sort((a, b) => a.name.localeCompare(b.name));
@@ -85,7 +38,17 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
     setSelectedLeft([]);
   }
 
-  const moveLeft = () => {
+  const moveLeft = ({
+    originLeftList,
+    setOriginLeftList,
+    setLeftList,
+    originRightList,
+    selectedRight,
+    setOriginRightList,
+    setRightList,
+    onTransferSelected,
+    setSelectedRight
+  }) => {
     const moveItems = originRightList.filter(item => selectedRight.includes(item.id));
 
     const updatedLeft = [...originLeftList, ...moveItems].sort((a, b) => a.name.localeCompare(b.name));
@@ -101,14 +64,23 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
     setSelectedRight([]);
   }
 
-  const toggleSelection = (id, selected, setSelected) => {
-    let selectedList = selected.includes(id)
+  function toggleSelection({id, selected, setSelected}) {
+    let selectedList = selected?.includes(id)
         ? selected.filter(v => v !== id)
         : [...selected, id]
     setSelected(selectedList)
   }
 
-  const onSearch = (value, key) => {
+  function onSearch({
+    value,
+    key,
+    setSearchSelectedLeft,
+    originLeftList,
+    setLeftList,
+    setSearchSelectedRight,
+    originRightList,
+    setRightList
+  }) {
     const regex = new RegExp(value, 'i');
     if (key === 'left') {
       setSearchSelectedLeft(value);
@@ -121,7 +93,15 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
     }
   }
 
-  const onClearInput = (key) => {
+  function onClearInput({
+    key,
+    setSearchSelectedLeft,
+    setLeftList,
+    originLeftList,
+    setSearchSelectedRight,
+    setRightList,
+    originRightList
+  }) {
     if (key === 'left') {
       setSearchSelectedLeft('');
       setLeftList(originLeftList);
@@ -131,116 +111,173 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
     }
   }
 
-  const handleDragEnd = (event) => {
-    const { over, active } = event
-    if (!over) return
+export default function Transfer({ leftListProp = [], rightListProp = [], onTransferSelected }) {
+  const { t } = useTranslation();
+  const [originLeftList, setOriginLeftList] = useState([]);
+  const [originRightList, setOriginRightList] = useState([]);
+  const [leftList, setLeftList] = useState([])
+  const [rightList, setRightList] = useState([]);
+  const [selectedLeft, setSelectedLeft] = useState([])
+  const [selectedRight, setSelectedRight] = useState([])
+  const [searchSelectedLeft, setSearchSelectedLeft] = useState("")
+  const [searchSelectedRight, setSearchSelectedRight] = useState("")
 
-    const draggedItem = active.data.current.item
-    const fromLeft = originLeftList.some(i => i.id === draggedItem.id)
-    const fromRight = originRightList.some(i => i.id === draggedItem.id)
 
-    if (over.id === "left" && fromRight) {
-      // เรียกฟังก์ชันเดิม moveLeft
-      setSelectedRight([draggedItem.id])
-      moveLeft()
+  useEffect(() => {
+    const sorted = [...leftListProp].sort((a, b) => a.name.localeCompare(b.name));
+    if (JSON.stringify(sorted) !== JSON.stringify(originLeftList)) {
+      setOriginLeftList(sorted);
+      setLeftList(sorted);
     }
+  }, [leftListProp, originLeftList]);
 
-    if (over.id === "right" && fromLeft) {
-      // เรียกฟังก์ชันเดิม moveRight
-      setSelectedLeft([draggedItem.id])
-      moveRight()
+  useEffect(() => {
+    const sorted = [...rightListProp].sort((a, b) => a.name.localeCompare(b.name));
+    if (JSON.stringify(sorted) !== JSON.stringify(originRightList)) {
+      setOriginRightList(sorted);
+      setRightList(sorted);
     }
-  }
+  }, [rightListProp,originRightList]);
+
+
+
 
   return (
-    <DndContext onDragEnd={handleDragEnd}>
       <div className="transfer">
         {/* Left list */}
         <Card className="transfer-left" >
-          <div className="transfer-title">Available</div>
+          <div className="transfer-title">{ t('transfer.available') }</div>
           <div className="transfer-box">
               <div className="transfer-search">
                   <Input
                   id="available"
                   type="text"
-                  placeholder="Enter Keyword"
+                  placeholder={ t('transfer.placeholder') }
                   required
                   value={searchSelectedLeft}
-                  onChange={(e)=> onSearch(e.target.value, 'left') }
+                  onChange={(e)=> onSearch({
+                    value: e.target.value,
+                    key:'left',
+                    setSearchSelectedLeft,
+                    originLeftList,
+                    setLeftList,
+                    setSearchSelectedRight,
+                    originRightList,
+                    setRightList
+                  })}
                   />
                   <FontAwesomeIcon
                     icon={faCircleXmark}
                     className={`x-clear-data-btn ${ searchSelectedLeft?.length ? 'active' : '' }`}
-                    onClick={() => onClearInput('left')}/>
+                    onClick={() => onClearInput({
+                      key:'left',
+                      setSearchSelectedLeft,
+                      setLeftList,
+                      originLeftList,
+                      setSearchSelectedRight,
+                      setRightList,
+                      originRightList
+                    })} />
               </div>
               <div className="transfer-list">
-                <DroppableZone id="left">
                   { leftList.map(item => (
-                    <DraggableItem key={item.id} item={item}>
                       <label key={item.id} className="flex items-center gap-2">
                       <Checkbox
                           checked={selectedLeft.includes(item.id)}
                           onCheckedChange={() =>
-                              toggleSelection(item.id, selectedLeft, setSelectedLeft)
+                              toggleSelection({ id:item.id, selected:selectedLeft, setSelected:setSelectedLeft})
                           }
                       />
                       {item.name}
                       </label>
-                    </DraggableItem>
                   ))}
-                </DroppableZone>
               </div>
           </div>
         </Card>
 
         {/* Buttons */}
         <div className="transfer-icons">
-          <Button onClick={moveRight} disabled={selectedLeft.length === 0}>
+          <Button
+            onClick={()=> moveRight({
+              originLeftList,
+              setLeftList,
+              selectedLeft,
+              setOriginLeftList,
+              originRightList,
+              setRightList,
+              setOriginRightList,
+              setSelectedLeft,
+              onTransferSelected
+            })}
+            disabled={selectedLeft.length === 0}>
             <FontAwesomeIcon icon={faChevronRight}></FontAwesomeIcon>
           </Button>
-          <Button onClick={moveLeft} disabled={selectedRight.length === 0}>
+          <Button
+            onClick={()=> moveLeft({
+              originLeftList,
+              setOriginLeftList,
+              setLeftList,
+              originRightList,
+              selectedRight,
+              setOriginRightList,
+              setRightList,
+              onTransferSelected,
+              setSelectedRight
+            })}
+            disabled={selectedRight.length === 0}>
             <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
           </Button>
         </div>
 
         {/* Right list */}
         <Card className="transfer-right">
-          <div className="transfer-title">Selected</div>
+          <div className="transfer-title">{ t('transfer.selected') }</div>
           <div className="transfer-box">
               <div className="transfer-search">
                   <Input
                   id="selected"
                   type="text"
-                  placeholder="Enter Keyword"
+                  placeholder={ t('transfer.placeholder') }
                   required
                   value={searchSelectedRight}
-                  onChange={(e)=>onSearch(e.target.value, 'right')}
-                  />
+                  onChange={(e)=>onSearch({
+                    value: e.target.value,
+                    key:'right',
+                    setSearchSelectedLeft,
+                    originLeftList,
+                    setLeftList,
+                    setSearchSelectedRight,
+                    originRightList,
+                    setRightList
+                  })} />
                   <FontAwesomeIcon
                     icon={faCircleXmark}
                     className={`x-clear-data-btn ${ searchSelectedRight?.length ? 'active' : '' }`}
-                    onClick={() => onClearInput('right')}/>
+                    onClick={() => onClearInput({
+                      key:'right',
+                      setSearchSelectedLeft,
+                      setLeftList,
+                      originLeftList,
+                      setSearchSelectedRight,
+                      setRightList,
+                      originRightList
+                    })} />
               </div>
               <div className="transfer-list">
-                <DroppableZone id="right">
                   {rightList.map(item => (
-                    <DraggableItem key={item.id} item={item}>
                       <label key={item.id} className="flex items-center gap-2">
                       <Checkbox
                           checked={selectedRight.includes(item.id)}
                           onCheckedChange={() =>
-                          toggleSelection(item.id, selectedRight, setSelectedRight)
+                          toggleSelection({id:item.id, selected:selectedRight, setSelected:setSelectedRight})
                           }
                       />
                       {item.name}
                       </label>
-                    </DraggableItem>
                   ))}
-                </DroppableZone>
               </div>
           </div>
         </Card>
       </div>
-    </DndContext>
   )
 }

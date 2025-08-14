@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -23,14 +24,24 @@ export default function BookCreator({
   const getById = useBookStore((state)=> state.getById);
 
   const initFormData = {
-      name: '',
-      author: '',
-      price: '',
+      nameTh: null,
+      nameEn: null,
+      author: null,
+      publisher: null,
+      pages: null,
+      isbn: null,
+      attachmentId: null,
+      rating: null,
+      price: null,
+      discount: null,
+      description: null,
+      summary: null,
       status: true,
+      updatedAt: new Date()
     }
 
   const bookForm = useForm({ defaultValues: initFormData })
-  // in bookForm have { register, handleSubmit,setValue,watch}
+  // in bookForm have { register, handleSubmit,setValue,watch }
 
   const formValues = bookForm.watch()
 
@@ -51,25 +62,40 @@ export default function BookCreator({
               : "Enter form below to create your book"}
           </CardDescription>
         </CardHeader>
-
         <CardContent>
-          <form onSubmit={bookForm.handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-6">
-              {/* Name */}
-              <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
+          <form onSubmit={()=> bookForm.handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-12 gap-5 ">
+              {/* Name TH */}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="name">Name TH</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                 <Input
-                  id="name"
+                  id="nameTh"
                   type="text"
-                  placeholder="Ascendent Eden"
-                  {...bookForm.register("name", { required: true })}
+                  placeholder="แอสเซนเดน เอเดน"
+                  {...bookForm.register("nameTh", { required: true })}
                   readOnly={isReadOnly}
                 />
               </div>
-
+              {/* Name EN */}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="name">Name EN</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
+                <Input
+                  id="nameEn"
+                  type="text"
+                  placeholder="Ascendent Eden"
+                  {...bookForm.register("nameEn", { required: true })}
+                  readOnly={isReadOnly}
+                />
+              </div>
               {/* Author */}
-              <div className="grid gap-2">
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="author">Author</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                 <Input
                   id="author"
                   type="text"
@@ -78,10 +104,37 @@ export default function BookCreator({
                   readOnly={isReadOnly}
                 />
               </div>
-
+              {/* Publisher */}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="publisher">Publisher</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
+                <Input
+                  id="publisher"
+                  type="text"
+                  placeholder="John Doe"
+                  {...bookForm.register("publisher", { required: true })}
+                  readOnly={isReadOnly}
+                />
+              </div>
+              {/* Pages */}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="pages">Pages</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
+                <Input
+                  id="pages"
+                  type="number"
+                  placeholder="120"
+                  {...bookForm.register("pages", { required: true })}
+                  readOnly={isReadOnly}
+                />
+              </div>
               {/* Price */}
-              <div className="grid gap-2">
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="price">Price</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                 <Input
                   id="price"
                   type="number"
@@ -90,14 +143,40 @@ export default function BookCreator({
                   readOnly={isReadOnly}
                 />
               </div>
-
+              {/* Discount */}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="discount">Discount</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
+                <Input
+                  id="discount"
+                  type="number"
+                  placeholder="120"
+                  {...bookForm.register("discount", { required: true })}
+                  readOnly={isReadOnly}
+                />
+              </div>
+              {/* description */}
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                <Label htmlFor="description">Description</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
+                <Textarea
+                  id="description"
+                  placeholder="Type your description here"
+                  {...bookForm.register("description", { required: true })}
+                  readOnly={isReadOnly}
+                   />
+              </div>
               {/* Status */}
-              <div className="grid gap-2">
+              <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="status">Status</Label>
+              </div>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
                 <Switch
                   id="status"
                   className={'size-xl'}
-                  checked={formValues.status}
+                  checked={ formValues.status }
                   onCheckedChange={(val) => bookForm.setValue("status", val)}
                   disabled={isReadOnly}
                 />
@@ -106,16 +185,17 @@ export default function BookCreator({
           </form>
         </CardContent>
 
-        <CardFooter>
-          <Button variant="outline" className="me-2" type="button">
-            Cancel
-          </Button>
-          {!isReadOnly && (
-            <Button type="submit" variant="outline">
-              Save
-            </Button>
-          )}
-        </CardFooter>
+        <CardFooter className="md:justify-end px-0">
+                    <Button variant="outline" className="button-cancel me-2">
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="button-save"
+                      onClick={()=> onSubmit }>
+                        Save
+                      </Button>
+                  </CardFooter>
       </Card>
     </div>
   )

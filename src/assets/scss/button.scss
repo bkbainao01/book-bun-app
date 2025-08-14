@@ -11,8 +11,8 @@ button {
 
 .button-new {
     background-color: transparent !important;
-    border: 1px solid $button-success !important;
-    color: $button-success;
+    border: 1px solid #AED274 !important;
+    color: #AED274;
 
     &:hover {
         box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
@@ -32,12 +32,12 @@ button {
 }
 
 .button-print {
-    background-color: $button-secondary !important;
+    background-color: #6c757d !important;
     color: aliceblue;
 }
 
 .button-delete {
-    background-color: $button-danger !important;
+    background-color: #dd4655 !important;
     color: aliceblue;
 }
 
@@ -59,7 +59,7 @@ button[role="switch"] {
     border: 2px solid transparent;
 
     &[aria-checked="true"] {
-        background-color: $color-primary;
+        background-color: #60a5fa;
     }
 
     span {
@@ -84,7 +84,7 @@ button[role="switch"].size-xl {
     border: 2px solid transparent;
 
     &[aria-checked="true"] {
-        background-color: $color-primary;
+        background-color: #60a5fa;
     }
 
     span {

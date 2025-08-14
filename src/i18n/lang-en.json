@@ -1,0 +1,21 @@
+{
+    "form": {
+        "email": "Email",
+        "password": "Password",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
+        "roles": "Roles",
+        "status": "Status"
+    },
+    "message":{
+    },
+    "button":{
+        "save" :"บันทึก",
+        "cancel":"ยกเลิก"
+    },
+    "transfer":{
+        "available": "Available",
+        "selected": "Selected",
+        "placeholder":"Enter Keyword"
+    }
+}
