@@ -5,13 +5,23 @@
         "firstname": "Firstname",
         "lastname": "Lastname",
         "roles": "Roles",
-        "status": "Status"
+        "status": "Status",
+        "nameTh": "Name (TH)",
+        "nameEn": "Name (EN)",
+        "author": "Author",
+        "publisher": "Publisher",
+        "publishAt": "Publisher At",
+        "pages": "Pages",
+        "price": "Price",
+        "discount": "Discount",
+        "description": "Discription",
+        "uploadImage": "Upload Image"
     },
     "message":{
     },
     "button":{
-        "save" :"บันทึก",
-        "cancel":"ยกเลิก"
+        "save" :"Save",
+        "cancel":"Cancel"
     },
     "transfer":{
         "available": "Available",
