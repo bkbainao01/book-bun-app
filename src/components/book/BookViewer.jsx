@@ -14,60 +14,46 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { useBookStore } from "@/stores/bookStore";
+import { useAttachmentStore } from "@/stores/attachmentStore";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-
-// Upload function with progress tracking
-async function uploadWithProgress({ url, formData, onProgress }) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    xhr.upload.onprogress = (evt) => {
-      if (!evt.lengthComputable) return;
-      const percent = Math.round((evt.loaded / evt.total) * 100);
-      onProgress?.(percent);
-    };
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(JSON.parse(xhr.responseText));
-      } else {
-        reject(new Error(`Upload failed (${xhr.status})`));
-      }
-    };
-    xhr.onerror = () => reject(new Error("Network error during upload"));
-    xhr.send(formData);
-  });
-}
+import { useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function BookViewer({ viewMode = true, isReadOnly = false }) {
   const { t } = useTranslation();
   const navigation = useNavigate();
   const { id } = useParams();
   const bookStore = useBookStore();
-  const getById = useBookStore((state) => state.getById);
-
+  const attachmentStore = useAttachmentStore();
+  const getBookById = useBookStore((state) => state.getById);
+  const bookData = bookStore.selectedData;
+  const progress = attachmentStore.progress;
+  const fileInputRef = useRef(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [progress, setProgress] = useState(0);
+  const [fileName, setFileName] = useState(null);
 
   const initFormData = {
-    nameTh: "",
-    nameEn: "",
-    author: "",
-    publisher: "",
+    nameTh: null,
+    nameEn: null,
+    author: null,
+    publisher: null,
     pages: null,
-    isbn: "",
+    isbn: null,
     attachmentId: null,
     rating: null,
     price: null,
     discount: null,
-    description: "",
-    summary: "",
+    description: null,
+    summary: null,
     status: true,
     updatedAt: new Date(),
+    attachmentFormData: null,
   };
 
-  const { register, handleSubmit, setValue, watch, reset } = useForm({
+  const { formState:{ errors }, register, handleSubmit, setValue, watch, reset } = useForm({
     defaultValues: initFormData,
   });
 
@@ -75,13 +61,37 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
 
   useEffect(() => {
     if (viewMode && id) {
-      getById(id);
+      getBookById(id);
     }
-  }, [viewMode, id, getById]);
+  }, [viewMode, id, getBookById]);
+
+  useEffect(() => {
+    if(viewMode && bookData?.id) {
+      reset({
+        nameTh: bookData.nameTh|| null,
+        nameEn: bookData.nameEn || null,
+        author: bookData.author || null,
+        publisher: bookData.publisher || null,
+        pages: bookData.pages || null,
+        isbn: bookData.isbn || null,
+        rating: bookData.rating || null,
+        price: bookData.price || null,
+        discount: bookData.discount || null,
+        description: bookData.description || null,
+        summary: bookData.summary || null,
+        status: !!bookData.status,
+        attachmentId: bookData.attachmentId || null,
+        attachmentFormData: null,
+      });
+    }
+  },[bookData,viewMode, reset])
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
+    setFileName(file.name);
 
     // Show preview if image
     if (file.type.startsWith("image/")) {
@@ -93,21 +103,16 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
     // Upload to server
     const formData = new FormData();
     formData.append("file", file);
-
+    console.log("🚀 ~ handleFileChange ~ formData:", formData)
     try {
-      const res = await uploadWithProgress({
-        url: "/api/upload", // Change this to your backend endpoint
-        formData,
-        onProgress: setProgress,
-      });
-
-      if (res?.attachmentId) {
-        setValue("attachmentId", res.attachmentId);
+      const res = await attachmentStore.create(formData);
+      console.log("🚀 ~ handleFileChange ~ res:", res)
+      if (res?.id) {
+        setValue("attachmentId", res.id); // 👈 set เข้า form
+        console.log("setFileName >> ",)
       }
     } catch (err) {
-      console.error("Upload error:", err);
-    } finally {
-      setProgress(0);
+      console.error("Upload failed", err);
     }
   };
 
@@ -148,6 +153,9 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   {...register("nameTh", { required: true })}
                   readOnly={isReadOnly}
                 />
+                {errors.nameTh?.type === "required" && (
+                    <p className="invalid-feedback">Name (TH) is required</p>
+                  )}
               </div>
 
               {/* Name EN */}
@@ -162,6 +170,9 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   {...register("nameEn", { required: true })}
                   readOnly={isReadOnly}
                 />
+                {errors.nameEn?.type === "required" && (
+                    <p className="invalid-feedback">Name (EN) is required</p>
+                  )}
               </div>
 
               {/* Author */}
@@ -176,6 +187,9 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   {...register("author", { required: true })}
                   readOnly={isReadOnly}
                 />
+                {errors.author?.type === "required" && (
+                    <p className="invalid-feedback">Author is required</p>
+                  )}
               </div>
 
               {/* Publisher */}
@@ -190,6 +204,9 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   {...register("publisher", { required: true })}
                   readOnly={isReadOnly}
                 />
+                {errors.publisher?.type === "required" && (
+                    <p className="invalid-feedback">Publisher is required</p>
+                  )}
               </div>
 
               {/* Pages */}
@@ -204,6 +221,9 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   {...register("pages", { required: true })}
                   readOnly={isReadOnly}
                 />
+                { errors.pages?.type === "required" && (
+                    <p className="invalid-feedback">Pages {t("validation.roles")}</p>
+                  )}
               </div>
 
               {/* Price */}
@@ -234,18 +254,31 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                 />
               </div>
               {/* File Upload */}
-              <Label htmlFor="file" className="col-span-12 md:col-span-3">
+              <Label htmlFor="file" className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 File
               </Label>
-              <div className="col-span-12 md:col-span-9 space-y-3">
-                <Input
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 space-y-3">
+                <input
                   id="file"
                   type="file"
                   accept="image/*,.pdf,.doc,.docx"
-                  onChange={handleFileChange}
-                  disabled={isReadOnly}
-                  placeholder="choose"
+                  onChange={(e)=>handleFileChange(e)}
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
                 />
+
+                {/* Button to trigger file input */}
+                <div>
+                  <Button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isReadOnly}
+                  >
+                    <FontAwesomeIcon icon={faCloudArrowUp}></FontAwesomeIcon>Choose File
+                  </Button>
+                  <span className="ps-5">{fileName}</span>
+                </div>
+
                 {previewUrl && (
                   <div className="rounded-lg border p-3">
                     <div className="text-sm mb-2">Preview</div>
@@ -278,7 +311,6 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   readOnly={isReadOnly}
                 />
               </div>
-
               {/* Status */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="status">{t("form.status")}</Label>

@@ -16,9 +16,10 @@ import { useRoleStore } from "@/stores/roleStore";
 import { useNavigate, useParams } from "react-router-dom";
 import TransferComponent from "@/components/Transfer";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
-export default function UserCreator({ viewMode = true, isReadOnly = false }) {
+
+export default function UserViewer({ viewMode = true, isReadOnly = false }) {
   const { t } = useTranslation();
   const navigation = useNavigate();
   const { id } = useParams();
@@ -34,15 +35,24 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
 
   // react-hook-form
   const initFormData = {
-      email: null,
-      password: null,
-      firstname: null,
-      lastname: null,
-      status: true,
-      roleIds: [],
-      roles: [],
-    }
-  const { register, handleSubmit, setValue, watch, reset } = useForm({defaultValues: initFormData});
+    email: null,
+    password: null,
+    firstname: null,
+    lastname: null,
+    status: true,
+    roleIds: [],
+    roles: [],
+  }
+
+  const {
+    formState: { errors },
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+  } = useForm({defaultValues: initFormData});
 
   // โหลดข้อมูลผู้ใช้และ role
   useEffect(() => {
@@ -73,22 +83,14 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
   }, [viewMode, userData, roleList, reset]);
 
   // Transfer select handler
-  const onTransferSelected = (obj) => {
+  const onTransferSelected = (field, obj) => {
     const roleIds = obj.right.map((x) => x.id);
-    setValue("roleIds", roleIds);
-    setValue("roles", obj.right);
     setLeft(obj.left);
     setRight(obj.right);
+    field.onChange(roleIds);   // ✅ อัพเดตค่าไปที่ react-hook-form
+    setValue("roles", obj.right); // ✅ เก็บ roles object ไว้ด้วย
   };
 
-  // submit handler
-  const onSubmit = (data) => {
-    if (viewMode) {
-      userStore.update(id, data, navigation);
-    } else {
-      userStore.create(data, navigation);
-    }
-  };
 
   return (
     <div className="user-creator">
@@ -106,14 +108,19 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
         <CardContent>
           <form
             id="user-form"
-            className={isReadOnly ? "readonly" : ""}
-            onSubmit={handleSubmit(onSubmit)}
+            className={ isReadOnly ? "form-readonly" : "" }
+            onSubmit={ handleSubmit((data)=>{
+              viewMode
+                ? userStore.update(id, data, navigation)
+                : userStore.create(data, navigation);
+            })}
           >
             <div className="grid grid-cols-12 gap-5 ">
               {/* Email */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="email" className="form-label">
                   {t("form.email")}
+                  <span className="required-field"></span>
                 </Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
@@ -121,9 +128,11 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
                   id="email"
                   type="email"
                   placeholder="john.doe@bookbun.com"
-                  required
-                  {...register("email")}
+                  {...register("email", { required: true })}
                 />
+                {errors.email?.type === "required" && (
+                    <p className="invalid-feedback">Email is required</p>
+                  )}
               </div>
 
               {/* Password (only create mode) */}
@@ -132,6 +141,7 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
                   <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                     <Label htmlFor="password" className="form-label">
                       {t("form.password")}
+                      <span className="required-field"></span>
                     </Label>
                   </div>
                   <div className="col-span-12 md:col-span-9 lg:col-span-10 ">
@@ -139,8 +149,11 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
                       id="password"
                       type="password"
                       required
-                      {...register("password")}
+                      { ...register("password", { required: true }) }
                     />
+                    { errors.password?.type === "required" && (
+                    <p className="invalid-feedback">Password is required</p>
+                  )}
                   </div>
                 </>
               )}
@@ -149,6 +162,7 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="firstname" className="form-label">
                   {t("form.firstname")}
+                  <span className="required-field"></span>
                 </Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
@@ -156,15 +170,18 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
                   id="firstname"
                   type="text"
                   placeholder="John"
-                  required
-                  {...register("firstname")}
+                  {...register("firstname", { required: true })}
                 />
+                 {errors.firstname?.type === "required" && (
+                    <p className="invalid-feedback">Firstname is required</p>
+                  )}
               </div>
 
               {/* Lastname */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="lastname" className="form-label">
                   {t("form.lastname")}
+                  <span className="required-field"></span>
                 </Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
@@ -172,23 +189,35 @@ export default function UserCreator({ viewMode = true, isReadOnly = false }) {
                   id="lastname"
                   type="text"
                   placeholder="Doe"
-                  required
-                  {...register("lastname")}
+                  {...register("lastname", { required: true })}
                 />
+                {errors.lastname?.type === "required" && (
+                    <p className="invalid-feedback">Lastname is required</p>
+                  )}
               </div>
-
               {/* Roles */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="roles" className="form-label">
                   {t("form.roles")}
+                  <span className="required-field"></span>
                 </Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
-                <TransferComponent
-                  leftListProp={left}
-                  rightListProp={right}
-                  onTransferSelected={onTransferSelected}
-                />
+                <Controller
+                  name="roleIds"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TransferComponent
+                      leftListProp={left}
+                      rightListProp={right}
+                      onTransferSelected={(obj) => onTransferSelected(field, obj)}
+                    />
+                  )}
+                  />
+                { errors.roleIds?.type === "required" && (
+                    <p className="invalid-feedback">Roles is required</p>
+                  )}
               </div>
 
               {/* Status */}

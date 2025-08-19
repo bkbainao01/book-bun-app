@@ -17,6 +17,9 @@
         "description": "Discription",
         "uploadImage": "Upload Image"
     },
+    "validate-text":{
+        "required":"is required"
+    },
     "message":{
     },
     "button":{

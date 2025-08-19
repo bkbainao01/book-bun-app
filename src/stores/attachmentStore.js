@@ -1,15 +1,16 @@
 import { create } from 'zustand'
-import { getAll, getById, create as createBook, update } from '@/services/bookService';
+import { getAll, getById, create as createAttachment, update } from '@/services/attachmentService';
 import { toast } from "sonner"
 
-export const useBookStore = create((set) => ({
+export const useAttachmentStore = create((set) => ({
   data: [],
   selectedData:  {},
+  progress:0,
   getAll: async (params) => {
     try {
       const res = await getAll(params);
       set({ data: res.data, selectedData: {} });
-      toast.success('Get All Books Success')
+      toast.success('Get All Attachment Success')
       return res.data;
     } catch (error) {
       toast.error(error.title, { description: error.message });
@@ -19,34 +20,29 @@ export const useBookStore = create((set) => ({
     try {
       const res = await getById(params);
       set({ data: [], selectedData: res.data });
-      toast.success('Get Book Success')
+      toast.success('Get Attachment Success')
       return res.data;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }
   },
-  create: async (params,navigate) => {
+  create: async (params) => {
     try {
-      const res = await createBook(params);
-      set({ data: [], selectedData: res.data });
-      toast.success("Create Books Success");
-      if(navigate) {
-        navigate('/base-info/books',{ replace:true })
-      }
+      const res = await createAttachment(params, (percent)=>set({ progress: percent }) );
+      console.log("🚀 ~ res:", res)
+      toast.success("Create Attachment Success");
       return;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }
   },
-  update: async (id, payload, navigate) => {
+
+  update: async (params) => {
     try {
-      const res = await update(id, payload);
-      set({ data: [], selectedData: res.data });
-      toast.success("Update Book Success");
-      if(navigate) {
-        navigate('/base-info/books',{ replace:true })
-      }
-      return res.data;
+      const res = await update(params);
+      console.log("🚀 ~ res:", res)
+      toast.success("Update Attachment Success");
+      return;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }

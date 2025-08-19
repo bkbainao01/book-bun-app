@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight, faCircleXmark } from "@fortawesome/free-solid-svg-icons"
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next";
 
 
 
@@ -153,7 +153,6 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
                   id="available"
                   type="text"
                   placeholder={ t('transfer.placeholder') }
-                  required
                   value={searchSelectedLeft}
                   onChange={(e)=> onSearch({
                     value: e.target.value,
@@ -238,7 +237,6 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
                   id="selected"
                   type="text"
                   placeholder={ t('transfer.placeholder') }
-                  required
                   value={searchSelectedRight}
                   onChange={(e)=>onSearch({
                     value: e.target.value,

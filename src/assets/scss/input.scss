@@ -1,4 +1,16 @@
 @use './variables.scss' as *;
+// validate input
+.invalid-feedback {
+    color: #fd675c;
+    font-size: 0.875em;
+    font-weight: 200;
+}
+
+.required-field::after {
+    content: "*";
+    color: red;
+}
+
 // light mode || default mode
 input,
 input[data-slot="input"],
