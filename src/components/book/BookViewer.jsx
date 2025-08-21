@@ -103,13 +103,10 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
     // Upload to server
     const formData = new FormData();
     formData.append("file", file);
-    console.log("🚀 ~ handleFileChange ~ formData:", formData)
     try {
       const res = await attachmentStore.create(formData);
-      console.log("🚀 ~ handleFileChange ~ res:", res)
       if (res?.id) {
         setValue("attachmentId", res.id); // 👈 set เข้า form
-        console.log("setFileName >> ",)
       }
     } catch (err) {
       console.error("Upload failed", err);
@@ -174,7 +171,6 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                     <p className="invalid-feedback">Name (EN) is required</p>
                   )}
               </div>
-
               {/* Author */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="author">{t("form.author")}</Label>
@@ -333,8 +329,7 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
             variant="outline"
             className="button-cancel me-2"
             type="button"
-            onClick={() => navigation(-1)}
-          >
+            onClick={() => navigation(-1)}>
             {t("button.cancel")}
           </Button>
           <Button type="submit" className="button-save" form="book-form">

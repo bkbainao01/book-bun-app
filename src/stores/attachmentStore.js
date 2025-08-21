@@ -29,9 +29,8 @@ export const useAttachmentStore = create((set) => ({
   create: async (params) => {
     try {
       const res = await createAttachment(params, (percent)=>set({ progress: percent }) );
-      console.log("🚀 ~ res:", res)
       toast.success("Create Attachment Success");
-      return;
+      return res;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }
@@ -40,9 +39,8 @@ export const useAttachmentStore = create((set) => ({
   update: async (params) => {
     try {
       const res = await update(params);
-      console.log("🚀 ~ res:", res)
       toast.success("Update Attachment Success");
-      return;
+      return res;
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }
