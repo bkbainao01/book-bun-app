@@ -37,12 +37,20 @@ export const useAuthStore = create((set) => ({
   token:  getInitialToken(),
   isLoggedIn : getInitialIsLoggedIn(),
 
-  login: async (email, password) => {
+  resetAuth: () => {
+    localStorage.removeItem('userData');
+    set({ user: null, token: null, isLoggedIn: false });
+  },
+
+  login: async (email, password, navigate=null) => {
     try {
       const res = await login(email, password)
       localStorage.setItem('userData',  JSON.stringify(res.data))
       set({ user: res.data.user, token: res.data.token, isLoggedIn: true })
       toast.success('Login Success')
+      if(navigate) {
+        navigate('/dashboard', { replace: true })
+      }
       return res.data
     } catch (error) {
       toast.error(error.title, { description: error.message });

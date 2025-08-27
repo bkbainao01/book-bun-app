@@ -24,16 +24,9 @@ export default function LoginPage() {
   const login = useAuthStore((state) => state.login)
 
   const onSubmit = async ({ email, password }) => {
-    setLoading(true)
-    try {
-      await login(email, password)
-      toast.success("Login Successfully")
-      navigate('/dashboard', { replace: true })
-    } catch (err) {
-      console.error('Login resp:', err)
-      toast.error(`Login Failed -- ${err}`)
-      setLoading(false)
-    }
+    setLoading(true);
+    await login(email, password, navigate);
+    setLoading(false);
   }
 
   return (
