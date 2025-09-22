@@ -124,12 +124,14 @@ export default function Transfer({ leftListProp = [], rightListProp = [], onTran
 
 
   useEffect(() => {
-    const sorted = [...leftListProp].sort((a, b) => a.name.localeCompare(b.name));
-    if (JSON.stringify(sorted) !== JSON.stringify(originLeftList)) {
-      setOriginLeftList(sorted);
-      setLeftList(sorted);
+    if(leftListProp?.length) {
+      const sorted = [...leftListProp].sort((a, b) => a.name.localeCompare(b.name));
+      if (JSON.stringify(sorted) !== JSON.stringify(originLeftList)) {
+        setOriginLeftList(sorted);
+        setLeftList(sorted);
+      }
     }
-  }, [leftListProp, originLeftList]);
+      }, [leftListProp, originLeftList]);
 
   useEffect(() => {
     const sorted = [...rightListProp].sort((a, b) => a.name.localeCompare(b.name));

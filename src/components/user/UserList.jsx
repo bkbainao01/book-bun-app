@@ -33,13 +33,15 @@ function onDelete(value) {
 
 const tableColumns = [
   {
-    key: 'firstname',
+    key: 'firstName',
     type:'string',
+    title: 'Firstname',
     class:''
   },
   {
-    key: 'lastname',
+    key: 'lastName',
     type:'string',
+    title: 'Lastname',
     class:''
   },
   {

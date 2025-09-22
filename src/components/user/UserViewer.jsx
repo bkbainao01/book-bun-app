@@ -70,8 +70,8 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
       setRight(userData.roles);
 
       reset({
-        firstname: userData.firstname || null,
-        lastname: userData.lastname || null,
+        firstname: userData.firstName || null,
+        lastname: userData.lastName || null,
         email: userData.email || null,
         status: userData.status ?? true,
         roleIds,
@@ -84,11 +84,14 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
 
   // Transfer select handler
   const onTransferSelected = (field, obj) => {
-    const roleIds = obj.right.map((x) => x.id);
+    if (!obj){
+      return;
+    }
+    const roleIds = obj?.right.map((x) => x.id);
     setLeft(obj.left);
     setRight(obj.right);
-    field.onChange(roleIds);   // ✅ อัพเดตค่าไปที่ react-hook-form
-    setValue("roles", obj.right); // ✅ เก็บ roles object ไว้ด้วย
+    field.onChange(roleIds);       // ✅ อัพเดต react-hook-form
+    setValue("roles", obj.right);  // ✅ เก็บ roles object ไว้ด้วย
   };
 
 

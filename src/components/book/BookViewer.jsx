@@ -105,8 +105,8 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
     formData.append("file", file);
     try {
       const res = await attachmentStore.create(formData);
-      if (res?.id) {
-        setValue("attachmentId", res.id); // 👈 set เข้า form
+      if (res?.data?.id) {
+        setValue("attachmentId", res.data.id); // 👈 set เข้า form
       }
     } catch (err) {
       console.error("Upload failed", err);
