@@ -18,11 +18,13 @@ import { useNavigate } from "react-router-dom"
 const onEdit = (obj, navigate)=>{
   navigate(`/base-info/books/view/${obj.id}`)
 }
+
 const onPrint = (obj, navigate)=>{
   navigate(`/base-info/books/print/${obj.id}`)
 }
-const onDelete = (obj)=>{
-  console.log("parent ==> OnDelete: ",obj)
+
+const onDelete = async (obj, deleteBook)=>{
+  await deleteBook(obj.original.id);
 }
 
 const onNewBook = async (navigate)=>{
@@ -134,6 +136,7 @@ export default function BookList() {
   const navigate = useNavigate();
   const bookStore = useBookStore();
   const getAllBooks = useBookStore(state => state.getAll);
+  const deleteBook = useBookStore(state => state.deleteBook);
   const bookList = bookStore.data;
 
   useEffect(() => {
@@ -160,7 +163,7 @@ export default function BookList() {
               action={{ isAction:true, isEdit: true, isPrint:false, isDelete: true}}
               onEdit={(value)=>onEdit(value, navigate)}
               onPrint={(value)=>onPrint(value, navigate)}
-              onDelete={(value)=>onDelete(value)}
+              onDelete={(value)=>onDelete(value, deleteBook)}
             ></TableDataComponent>
           </CardContent>
           <CardFooter className="flex-col gap-2">

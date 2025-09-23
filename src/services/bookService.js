@@ -55,3 +55,12 @@ export async function remove(id) {
   }
 }
 
+export async function deleteBook(id) {
+  try {
+    const res = await axios.delete(`${bookPath}/${id}`);
+    return res.data
+  } catch (error) {
+    console.error("error: ", error)
+    throw error
+  }
+}

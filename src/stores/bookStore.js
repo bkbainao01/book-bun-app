@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { getAll, getById, create as createBook, update } from '@/services/bookService';
+import { getAll, getById, create as createBook, update, deleteBook } from '@/services/bookService';
 import { toast } from "sonner"
 
 export const useBookStore = create((set) => ({
@@ -46,6 +46,15 @@ export const useBookStore = create((set) => ({
       if(navigate) {
         navigate('/base-info/books',{ replace:true })
       }
+      return res.data;
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+  deleteBook: async (id) => {
+    try {
+      const res = await deleteBook(id);
+      toast.success("Delete Book Success");
       return res.data;
     } catch (error) {
       toast.error(error.title, { description: error.message });
