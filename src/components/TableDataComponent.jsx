@@ -32,6 +32,18 @@ import {
 } from "@/components/ui/table";
 import moment from "moment";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 // 🔹 Columns definition
 
 function capitalizeLetter(str) {
@@ -48,11 +60,11 @@ function dynamicColList(col) {
     enableHiding: false,
     cell: ({ row }) => {
       let date = null
-      switch(field.type) {
+      switch (field.type) {
         case 'roles':
           return row.original[field.key]
-          .map((item) => `${item.role.name}`)
-          .join(", ");
+            .map((item) => `${item.role.name}`)
+            .join(", ");
         case 'status':
           return row.getValue(field.key) === true ? "True" : "False";
         case 'date':
@@ -65,9 +77,9 @@ function dynamicColList(col) {
   }));
 };
 
-function filterInput (filters,table) {
-  return filters.map((filter,fIndex) => {
-    switch(filter.type){
+function filterInput(filters, table) {
+  return filters.map((filter, fIndex) => {
+    switch (filter.type) {
       case 'string':
         return <Input
           key={filter.key}
@@ -83,11 +95,11 @@ function filterInput (filters,table) {
   });
 }
 
-function filterPart (filters,table) {
+function filterPart(filters, table) {
   return (
-  <>
+    <>
       <div className="flex flex-wrap items-center py-4">
-        { filterInput(filters,table)}
+        {filterInput(filters, table)}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -95,7 +107,7 @@ function filterPart (filters,table) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            { table
+            {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => (
@@ -112,7 +124,7 @@ function filterPart (filters,table) {
         </DropdownMenu>
       </div>
     </>
-    )
+  )
 }
 
 // 🔹 Main table component
@@ -164,13 +176,24 @@ export default function TableDataComponent({
               </Button>
             )}
             {action.isDelete && (
-              <Button
-                className="button-delete"
-                size="sm"
-                onClick={() => onDelete(row)}
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </Button>
+              <AlertDialog >
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="button-delete" size="sm">
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>ลบไหม?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => onDelete(row)} >Confirm</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
           </div>
         );
@@ -200,7 +223,7 @@ export default function TableDataComponent({
 
   return (
     <div className={`${tableName} tableData w-full`} id="TableData">
-      { filterPart(filters,table)}
+      {filterPart(filters, table)}
 
       <div className="rounded-md border">
         <Table>
@@ -212,9 +235,9 @@ export default function TableDataComponent({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>

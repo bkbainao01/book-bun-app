@@ -44,7 +44,7 @@ export async function update(id,payload) {
   }
 }
 
-export async function remove(id) {
+export async function deleteUser(id) {
   try {
     const res = await axios.delete(`${userPath}/${id}`);
     return res.data

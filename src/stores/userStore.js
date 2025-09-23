@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { getAll, getById, create as createUser, update } from '@/services/userService';
+import { getAll, getById, create as createUser, update, deleteUser } from '@/services/userService';
 import { toast } from "sonner"
 import { replace } from 'react-router-dom';
 
@@ -48,6 +48,15 @@ export const useUserStore = create((set) => ({
       if(navigate) {
         navigate('/base-info/users',{ replace:true })
       }
+      return res.data;
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+  deleteUser: async (id) => {
+    try {
+      const res = await deleteUser(id);
+      toast.success("Delete User Success");
       return res.data;
     } catch (error) {
       toast.error(error.title, { description: error.message });
