@@ -37,8 +37,8 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
   const initFormData = {
     email: null,
     password: null,
-    firstname: null,
-    lastname: null,
+    firstName: null,
+    lastName: null,
     status: true,
     roleIds: [],
     roles: [],
@@ -70,8 +70,8 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
       setRight(userData.roles);
 
       reset({
-        firstname: userData.firstName || null,
-        lastname: userData.lastName || null,
+        firstName: userData.firstName || null,
+        lastName: userData.lastName || null,
         email: userData.email || null,
         status: userData.status ?? true,
         roleIds,
@@ -93,7 +93,6 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
     field.onChange(roleIds);       // ✅ อัพเดต react-hook-form
     setValue("roles", obj.right);  // ✅ เก็บ roles object ไว้ด้วย
   };
-
 
   return (
     <div className="user-creator">
@@ -161,41 +160,41 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
                 </>
               )}
 
-              {/* Firstname */}
+              {/* FirstName */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                <Label htmlFor="firstname" className="form-label">
+                <Label htmlFor="firstName" className="form-label">
                   {t("form.firstname")}
                   <span className="required-field"></span>
                 </Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
                 <Input
-                  id="firstname"
+                  id="firstName"
                   type="text"
                   placeholder="John"
-                  {...register("firstname", { required: true })}
+                  {...register("firstName", { required: true })}
                 />
-                 {errors.firstname?.type === "required" && (
-                    <p className="invalid-feedback">Firstname is required</p>
+                 {errors.firstName?.type === "required" && (
+                    <p className="invalid-feedback">FirstName is required</p>
                   )}
               </div>
 
-              {/* Lastname */}
+              {/* LastName */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                <Label htmlFor="lastname" className="form-label">
+                <Label htmlFor="lastName" className="form-label">
                   {t("form.lastname")}
                   <span className="required-field"></span>
                 </Label>
               </div>
               <div className="col-span-12 md:col-span-9 lg:col-span-10">
                 <Input
-                  id="lastname"
+                  id="lastName"
                   type="text"
                   placeholder="Doe"
-                  {...register("lastname", { required: true })}
+                  {...register("lastName", { required: true })}
                 />
-                {errors.lastname?.type === "required" && (
-                    <p className="invalid-feedback">Lastname is required</p>
+                {errors.lastName?.type === "required" && (
+                    <p className="invalid-feedback">LastName is required</p>
                   )}
               </div>
               {/* Roles */}
@@ -249,7 +248,11 @@ export default function UserViewer({ viewMode = true, isReadOnly = false }) {
           >
             {t("button.cancel")}
           </Button>
-          <Button type="submit" className="button-save" form="user-form">
+          <Button
+            type="submit"
+            className="button-save"
+            form="user-form"
+          >
             {t("button.save")}
           </Button>
         </CardFooter>
