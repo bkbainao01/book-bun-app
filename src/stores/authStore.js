@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { login, logout, register } from '@/services/authService.js';
+import { login, logout, register, authGoogle, authGoogleCallback } from '@/services/authService.js';
 import { toast } from "sonner"
+import * as jwt_decode from "jwt-decode"
 
 const getInitialUser = () => {
   try {
@@ -56,6 +57,27 @@ export const useAuthStore = create((set) => ({
       toast.error(error.title, { description: error.message });
     }
   },
+
+  authGoogle: async () => {
+    try {
+      return authGoogle();
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+
+  afterAuthGoogleCallback: async (token) => {
+    console.log("🚀 ~ token:", token)
+    const decoded = jwt_decode.jwtDecode(token)
+    console.log('decode token >> ',decoded);
+    try {
+    console.log('decode token >> ',decoded);
+
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+
   logout: async () => {
     try {
       const token = useAuthStore.getState().token

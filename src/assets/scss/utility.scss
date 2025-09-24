@@ -33,9 +33,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #E8717E;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to bottom, #E8717E, #333);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to bottom, #E8717E, #333); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    // background: #E8717E;  /* fallback for old browsers */
+    // background: -webkit-linear-gradient(to bottom, #E8717E, #333);  /* Chrome 10-25, Safari 5.1-6 */
+    // background: linear-gradient(to bottom, #E8717E, #333); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-image: linear-gradient(to top, #130204, #431c23, #79313c, #b44655, #f35d6e);
 }
 
 .readonly * {
