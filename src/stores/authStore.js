@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { login, logout, register, authGoogle, authGoogleCallback } from '@/services/authService.js';
 import { toast } from "sonner"
-import * as jwt_decode from "jwt-decode"
+import { jwtDecode } from "jwt-decode"
 
 const getInitialUser = () => {
   try {
@@ -68,14 +68,23 @@ export const useAuthStore = create((set) => ({
 
   afterAuthGoogleCallback: async (token, navigate=null) => {
     try {
-      const decoded = jwt_decode.jwtDecode(token)
-      localStorage.setItem('userData',  JSON.stringify(decoded))
-      set({ user: decoded.user, token: decoded.token, isLoggedIn: true })
-      toast.success('Login Success')
-      if(navigate) {
-        navigate('/dashboard', { replace: true })
+      const userData = jwtDecode(token)
+
+      if (!userData && !userData.user && !userData.token) {
+        toast.error('Login failed', { description: 'Invalid token data' });
+        return;
       }
-      return decoded
+
+      localStorage.setItem('userData', JSON.stringify(userData))
+      set({ user: userData.user , token: userData.token, isLoggedIn: true })
+
+      toast.success('Login Success')
+      setTimeout(() => {
+        if (navigate) {
+          navigate('/dashboard', { replace: true })
+        }
+      }, 3000);
+      return userData
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }

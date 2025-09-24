@@ -1,7 +1,6 @@
 import axios from '@/api/axios'
-
+import { config } from '@/config/config.js';
 const authPath = '/api/v1/auth'
-
 // function for login
 export async function login(email, password) {
   try {
@@ -37,9 +36,7 @@ export async function register(payload) {
 
 export async function authGoogle() {
   try {
-    // const res = await axios.get(`${authPath}/google`)
-    // console.log("🚀 ~ authGoogle ~ res:", res)
-    window.location.href = 'http://localhost:5175/api/v1/auth/google'
+    window.location.href = `${config.baseUrl}${authPath}/google`;
     return { };
   } catch (error) {
     console.error("error: ", error)
