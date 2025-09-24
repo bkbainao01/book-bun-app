@@ -27,7 +27,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     const token = searchParams.get("token");
-    if (token) {
+    if (token && token !== "") {
       afterAuthGoogleCallback(token, navigate);
     }
   }, [searchParams, navigate, afterAuthGoogleCallback]);

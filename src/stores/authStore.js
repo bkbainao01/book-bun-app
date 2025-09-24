@@ -93,6 +93,7 @@ export const useAuthStore = create((set) => ({
       toast.error(error.title, { description: error.message });
     }
   },
+
   register: async (payload)=>{
     try {
       await register(payload)
