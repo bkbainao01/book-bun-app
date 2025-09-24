@@ -66,13 +66,16 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  afterAuthGoogleCallback: async (token) => {
-    console.log("🚀 ~ token:", token)
-    const decoded = jwt_decode.jwtDecode(token)
-    console.log('decode token >> ',decoded);
+  afterAuthGoogleCallback: async (token, navigate=null) => {
     try {
-    console.log('decode token >> ',decoded);
-
+      const decoded = jwt_decode.jwtDecode(token)
+      localStorage.setItem('userData',  JSON.stringify(decoded))
+      set({ user: decoded.user, token: decoded.token, isLoggedIn: true })
+      toast.success('Login Success')
+      if(navigate) {
+        navigate('/dashboard', { replace: true })
+      }
+      return decoded
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }

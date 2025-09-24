@@ -28,14 +28,9 @@ export default function LoginPage() {
   useEffect(() => {
     const token = searchParams.get("token");
     if (token) {
-      afterAuthGoogleCallback(token);
-      // เก็บ token ไว้ localStorage / context / store
-      // localStorage.setItem("access_token", token);
-
-      // // เสร็จแล้ว redirect ไปหน้า dashboard
-      // navigate("/dashboard");
+      afterAuthGoogleCallback(token, navigate);
     }
-  }, [searchParams, navigate]);
+  }, [searchParams, navigate, afterAuthGoogleCallback]);
 
 
   const onSubmit = async ({ email, password }) => {
