@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { getAll, getById, create as createAttachment, update } from '@/services/attachmentService';
+import { getAll, getById, create as createAttachment, update, loadImage } from '@/services/attachmentService';
 import { toast } from "sonner"
 
 export const useAttachmentStore = create((set) => ({
@@ -45,4 +45,12 @@ export const useAttachmentStore = create((set) => ({
       toast.error(error.title, { description: error.message });
     }
   },
+  loadImage: async (attachmentId) =>{
+  try {
+    const res = await loadImage(attachmentId);
+    return res;
+  } catch (err) {
+    console.error("Load Image Failed", err);
+  }
+}
 }))

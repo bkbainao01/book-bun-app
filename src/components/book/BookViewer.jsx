@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { useBookStore } from "@/stores/bookStore";
 import { useAttachmentStore } from "@/stores/attachmentStore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRef } from "react";
@@ -29,6 +29,7 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
   const bookStore = useBookStore();
   const attachmentStore = useAttachmentStore();
   const getBookById = useBookStore((state) => state.getById);
+  const loadImage = useAttachmentStore((state) => state.loadImage);
   const bookData = bookStore.selectedData;
   const progress = attachmentStore.progress;
   const fileInputRef = useRef(null);
@@ -65,10 +66,10 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
     }
   }, [viewMode, id, getBookById]);
 
-  useEffect(() => {
-    if(viewMode && bookData?.id) {
+  const fetchAttachment = useCallback(async () => {
+    if (viewMode && bookData?.id) {
       reset({
-        nameTh: bookData.nameTh|| null,
+        nameTh: bookData.nameTh || null,
         nameEn: bookData.nameEn || null,
         author: bookData.author || null,
         publisher: bookData.publisher || null,
@@ -83,8 +84,17 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
         attachmentId: bookData.attachmentId || null,
         attachmentFormData: null,
       });
+      if (bookData.attachmentId && bookData.attachment) {
+        const imageUrl = await loadImage(bookData.attachment.path);
+        setPreviewUrl(imageUrl);
+        setFileName(bookData.attachment.name);
+      }
     }
-  },[bookData,viewMode, reset])
+  }, [viewMode, bookData, reset, loadImage]);
+
+  useEffect(() => {
+    fetchAttachment();
+  }, [bookData, viewMode, reset, loadImage, fetchAttachment]);
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];

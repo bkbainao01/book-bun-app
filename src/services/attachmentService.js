@@ -63,3 +63,13 @@ export async function remove(id) {
   }
 }
 
+export async function loadImage(id) {
+  try {
+    const res = await axios.get(`${attachmentPath}/view/${id}`, { responseType: "blob" });
+    const imageUrl = URL.createObjectURL(res.data);
+    return imageUrl;
+  } catch (err) {
+    console.error("Load Image Failed", err);
+  }
+}
+
