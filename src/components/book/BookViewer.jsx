@@ -124,6 +124,10 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
   };
 
   const onSubmit = async (data) => {
+    data.price = data.price ? parseInt(data.price) : 0;
+    data.pages = data.pages ? parseInt(data.pages) : 0;
+    data.discount = data.discount ? parseInt(data.discount) : 0;
+    data.rating = data.rating ? parseInt(data.rating) : 0;
     if (viewMode) {
       bookStore.update(id, data);
     } else {
@@ -148,6 +152,51 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} id="book-form">
             <div className="grid grid-cols-12 gap-5">
+              {/* File Upload */}
+              <Label htmlFor="file" className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
+                ภาพปกหนังสือ
+              </Label>
+              <div className="col-span-12 md:col-span-9 lg:col-span-10 space-y-3">
+                <input
+                  id="file"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e)=>handleFileChange(e)}
+                  style={{ display: "none" }}
+                  ref={fileInputRef}
+                />
+
+                {/* Button to trigger file input */}
+                <div>
+                  <Button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isReadOnly}
+                  >
+                    <FontAwesomeIcon icon={faCloudArrowUp}></FontAwesomeIcon>Choose File
+                  </Button>
+                  <span className="ps-5">{fileName}</span>
+                </div>
+
+                {previewUrl && (
+                  <div className="rounded-lg border p-3">
+                    <div className="text-sm mb-2">Preview</div>
+                    <img
+                      src={previewUrl}
+                      alt="preview"
+                      className="max-h-56 object-contain"
+                    />
+                  </div>
+                )}
+                {progress > 0 && progress < 100 && (
+                  <div className="space-y-2">
+                    <Progress value={progress} />
+                    <div className="text-xs text-muted-foreground">
+                      {progress}%
+                    </div>
+                  </div>
+                )}
+              </div>
               {/* Name TH */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="nameTh">{t("form.nameTh")}</Label>
@@ -259,52 +308,6 @@ export default function BookViewer({ viewMode = true, isReadOnly = false }) {
                   readOnly={isReadOnly}
                 />
               </div>
-              {/* File Upload */}
-              <Label htmlFor="file" className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
-                File
-              </Label>
-              <div className="col-span-12 md:col-span-9 lg:col-span-10 space-y-3">
-                <input
-                  id="file"
-                  type="file"
-                  accept="image/*,.pdf,.doc,.docx"
-                  onChange={(e)=>handleFileChange(e)}
-                  style={{ display: "none" }}
-                  ref={fileInputRef}
-                />
-
-                {/* Button to trigger file input */}
-                <div>
-                  <Button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isReadOnly}
-                  >
-                    <FontAwesomeIcon icon={faCloudArrowUp}></FontAwesomeIcon>Choose File
-                  </Button>
-                  <span className="ps-5">{fileName}</span>
-                </div>
-
-                {previewUrl && (
-                  <div className="rounded-lg border p-3">
-                    <div className="text-sm mb-2">Preview</div>
-                    <img
-                      src={previewUrl}
-                      alt="preview"
-                      className="max-h-56 object-contain"
-                    />
-                  </div>
-                )}
-                {progress > 0 && progress < 100 && (
-                  <div className="space-y-2">
-                    <Progress value={progress} />
-                    <div className="text-xs text-muted-foreground">
-                      {progress}%
-                    </div>
-                  </div>
-                )}
-              </div>
-
               {/* Description */}
               <div className="col-span-12 md:col-span-3 lg:col-span-2 self-center">
                 <Label htmlFor="description">{t("form.description")}</Label>

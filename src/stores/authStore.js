@@ -120,7 +120,6 @@ export const useAuthStore = create((set) => ({
       localStorage.removeItem('userData')
       set({ user: null, token: null, isLoggedIn: false });
       toast.success('Logout Success')
-      window.location.href = '/login';
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }
