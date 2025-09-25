@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 
 export default function LoginPage() {
   const {
@@ -24,13 +24,16 @@ export default function LoginPage() {
   const login = useAuthStore((state) => state.login)
   const authGoogle = useAuthStore((state) => state.authGoogle)
   const afterAuthGoogleCallback = useAuthStore((state) => state.afterAuthGoogleCallback)
+  const authMicrosoft = useAuthStore((state) => state.authMicrosoft)
+  const afterAuthMicrosoftCallback = useAuthStore((state) => state.afterAuthMicrosoftCallback)
 
   useEffect(() => {
     const token = searchParams.get("token");
     if (token && token !== "") {
       afterAuthGoogleCallback(token, navigate);
+      afterAuthMicrosoftCallback(token, navigate);
     }
-  }, [searchParams, navigate, afterAuthGoogleCallback]);
+  }, [searchParams, navigate, afterAuthGoogleCallback, afterAuthMicrosoftCallback]);
 
 
   const onSubmit = async ({ email, password }) => {
@@ -42,6 +45,12 @@ export default function LoginPage() {
   const onGoogleAuth = async () => {
     setLoading(true);
     await authGoogle();
+    setLoading(false);
+  }
+
+  const onMicrosoftAuth = async () => {
+    setLoading(true);
+    await authMicrosoft();
     setLoading(false);
   }
 
@@ -92,7 +101,7 @@ export default function LoginPage() {
                 <hr className="w-64 h-px my-8 bg-white border-0 dark:text-white"/>
             </div>
             <div className="">
-              <Button
+            <Button
                 type="button"
                 disabled={loading}
                 variant="outline"
@@ -100,6 +109,15 @@ export default function LoginPage() {
                 onClick={() => onGoogleAuth()}
               >
                 <FontAwesomeIcon icon={faGoogle} /> Sign in with Google
+              </Button>
+              <Button
+                type="button"
+                disabled={loading}
+                variant="outline"
+                className={"w-full mb-3"}
+                onClick={() => onMicrosoftAuth()}
+              >
+                <FontAwesomeIcon icon={faMicrosoft} /> Sign in with Microsoft
               </Button>
             </div>
           </form>

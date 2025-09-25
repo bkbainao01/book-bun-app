@@ -44,10 +44,10 @@ export async function authGoogle() {
   }
 }
 
-export async function authGoogleCallback() {
+export async function authMicrosoft() {
   try {
-    const res = await axios.get(`${authPath}/google/callback`)
-    return res.data
+    window.location.href = `${config.baseUrl}${authPath}/microsoft`;
+    return { };
   } catch (error) {
     console.error("error: ", error)
     throw error

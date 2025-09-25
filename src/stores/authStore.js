@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { login, logout, register, authGoogle, authGoogleCallback } from '@/services/authService.js';
+import { login, logout, register, authGoogle, authMicrosoft } from '@/services/authService.js';
 import { toast } from "sonner"
 import { jwtDecode } from "jwt-decode"
 
@@ -85,6 +85,29 @@ export const useAuthStore = create((set) => ({
         }
       }, 3000);
       return userData
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+
+  authMicrosoft: async () => {
+    try {
+      return authMicrosoft();
+    } catch (error) {
+      toast.error(error.title, { description: error.message });
+    }
+  },
+
+  afterAuthMicrosoftCallback: async (token, navigate=null) => {
+    try {
+      const decoded = jwtDecode(token)
+      localStorage.setItem('userData',  JSON.stringify(decoded))
+      set({ user: decoded.user, token: decoded.token, isLoggedIn: true })
+      toast.success('Login Success')
+      if(navigate) {
+        navigate('/dashboard', { replace: true })
+      }
+      return decoded
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }
