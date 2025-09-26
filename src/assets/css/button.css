@@ -1,22 +1,21 @@
-@use './variables.scss' as *;
-// Primary Button-----------------------------------------------------------------------
+/* Primary Button----------------------------------------------------------------------- */
 button {
     transition: background 0.3s ease;
     cursor: pointer;
+}
 
-    &:hover {
-        box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
-    }
+button:hover {
+    box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
 }
 
 .button-new {
     background-color: transparent !important;
     border: 1px solid #AED274 !important;
     color: #AED274;
+}
 
-    &:hover {
-        box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
-    }
+.button-new:hover {
+    box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
 }
 
 .button-primary,
@@ -46,9 +45,8 @@ button {
     top: 10%;
 }
 
-
-// Switch Button-----------------------------------------------------------------------
-// size-normal
+/* Switch Button----------------------------------------------------------------------- */
+/* size-normal */
 button[role="switch"] {
     width: 26px;
     height: 15px;
@@ -57,23 +55,24 @@ button[role="switch"] {
     position: relative;
     transition: background-color 0.3s ease;
     border: 2px solid transparent;
-
-    &[aria-checked="true"] {
-        background-color: #60a5fa;
-    }
-
-    span {
-        position: absolute;
-        left: 2px;
-        top: 1px;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: white;
-        transition: transform 0.3s ease;
-    }
 }
-// size-xl
+
+button[role="switch"][aria-checked="true"] {
+    background-color: #60a5fa;
+}
+
+button[role="switch"] span {
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease;
+}
+
+/* size-xl */
 button[role="switch"].size-xl {
     width: 48px;
     height: 26px;
@@ -82,21 +81,19 @@ button[role="switch"].size-xl {
     position: relative;
     transition: background-color 0.3s ease;
     border: 2px solid transparent;
-
-    &[aria-checked="true"] {
-        background-color: #60a5fa;
-    }
-
-    span {
-        position: absolute;
-        left: 2px;
-        top: 1px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background-color: white;
-        transition: transform 0.3s ease;
-    }
 }
 
+button[role="switch"].size-xl[aria-checked="true"] {
+    background-color: #60a5fa;
+}
 
+button[role="switch"].size-xl span {
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.3s ease;
+}

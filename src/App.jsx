@@ -3,7 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useRoutes } from 'react-router-dom'
 import routes from '@/routes';
 import './assets/css/index.css'
-import './assets/scss/index.scss'
+// import './assets/scss/index.scss'
 
 function App() {
   const routing = useRoutes(routes);

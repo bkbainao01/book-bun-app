@@ -1,8 +1,7 @@
-
-// use woff2 for web instead of ttf because woff2 is lighter than ttf.
+/* Use woff2 for web instead of ttf because woff2 is lighter */
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-Thin.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-Thin.woff2') format('woff2');
   font-weight: 100;
   font-style: normal;
   font-display: swap;
@@ -10,7 +9,7 @@
 
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-ExtraLight.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-ExtraLight.woff2') format('woff2');
   font-weight: 200;
   font-style: normal;
   font-display: swap;
@@ -18,7 +17,7 @@
 
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-Light.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-Light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -26,7 +25,7 @@
 
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-Regular.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -34,7 +33,7 @@
 
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-Medium.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -42,7 +41,7 @@
 
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-SemiBold.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-SemiBold.woff2') format('woff2');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -50,8 +49,9 @@
 
 @font-face {
   font-family: 'Anuphan';
-  src: url('@/assets/fonts/Anuphan-Bold.woff2') format('woff2');
+  src: url('../assets/fonts/Anuphan-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
+

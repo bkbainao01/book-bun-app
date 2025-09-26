@@ -1,0 +1,93 @@
+/* Validate input */
+.invalid-feedback {
+  color: #fd675c;
+  font-size: 0.875em;
+  font-weight: 200;
+}
+
+.required-field::after {
+  content: "*";
+  color: red;
+}
+
+/* Light mode / default mode */
+input,
+input[data-slot="input"],
+input:-webkit-autofill,
+textarea {
+  padding: 10px 14px;
+  background-color: #e8f0fe !important;
+  color: #343434;
+  border: #6b6b6b 1px solid;
+}
+
+input:focus-visible,
+input[data-slot="input"]:focus-visible,
+input:-webkit-autofill:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
+}
+
+/* Input password visible container */
+.input-pwd-visible {
+  background-color: #e8f0fe !important;
+  display: flex;
+  border-radius: 0.375rem;
+}
+
+.input-pwd-visible:focus-within {
+  box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
+}
+
+.input-pwd-visible input[data-slot="input"],
+.input-pwd-visible input:-webkit-autofill {
+  background: none;
+  color: #343434;
+  border: none;
+  box-shadow: none;
+  width: 270px;
+}
+
+.input-pwd-visible input[data-slot="input"]:focus-visible,
+.input-pwd-visible input:-webkit-autofill:focus-visible {
+  box-shadow: none;
+}
+
+.input-pwd-visible .eye-visible-icon {
+  background: none;
+  color: #333;
+  margin: auto;
+}
+
+.input-pwd-visible .eye-visible-icon:hover {
+  color: #888;
+}
+
+/* Integer input (Remove arrows/spinners) */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Dark mode */
+.dark input[data-slot="input"],
+.dark input:-webkit-autofill,
+.dark textarea {
+  background-color: #444 !important;
+  color: #fff;
+  border: #666;
+}
+
+.dark input[data-slot="input"]:focus-visible,
+.dark input:-webkit-autofill:focus-visible,
+.dark textarea:focus-visible {
+  box-shadow: 0 0 2px 5px rgba(226, 109, 122, 0.3);
+}

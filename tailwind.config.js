@@ -2,7 +2,7 @@
 export default {
   darkMode: ["class"], // คุมด้วย class
   content: [
-    './src/**/*.{js,ts,jsx,tsx,scss}', // เพิ่ม scss
+    './src/**/*.{js,ts,jsx,tsx,css}', // เพิ่ม scss
   ],
   theme: {
     extend: {

@@ -66,7 +66,7 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  afterAuthGoogleCallback: async (token, navigate=null) => {
+  afterAuthSSOCallback: async (token, navigate=null) => {
     try {
       const userData = jwtDecode(token)
 
@@ -78,12 +78,7 @@ export const useAuthStore = create((set) => ({
       localStorage.setItem('userData', JSON.stringify(userData))
       set({ user: userData.user , token: userData.token, isLoggedIn: true })
 
-      toast.success('Login Success')
-      setTimeout(() => {
-        if (navigate) {
-          navigate('/dashboard', { replace: true })
-        }
-      }, 3000);
+      // toast.success('Login Success')
       return userData
     } catch (error) {
       toast.error(error.title, { description: error.message });
@@ -93,21 +88,6 @@ export const useAuthStore = create((set) => ({
   authMicrosoft: async () => {
     try {
       return authMicrosoft();
-    } catch (error) {
-      toast.error(error.title, { description: error.message });
-    }
-  },
-
-  afterAuthMicrosoftCallback: async (token, navigate=null) => {
-    try {
-      const decoded = jwtDecode(token)
-      localStorage.setItem('userData',  JSON.stringify(decoded))
-      set({ user: decoded.user, token: decoded.token, isLoggedIn: true })
-      toast.success('Login Success')
-      if(navigate) {
-        navigate('/dashboard', { replace: true })
-      }
-      return decoded
     } catch (error) {
       toast.error(error.title, { description: error.message });
     }

@@ -23,17 +23,15 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const login = useAuthStore((state) => state.login)
   const authGoogle = useAuthStore((state) => state.authGoogle)
-  const afterAuthGoogleCallback = useAuthStore((state) => state.afterAuthGoogleCallback)
   const authMicrosoft = useAuthStore((state) => state.authMicrosoft)
-  const afterAuthMicrosoftCallback = useAuthStore((state) => state.afterAuthMicrosoftCallback)
+  const afterAuthSSOCallback = useAuthStore((state) => state.afterAuthSSOCallback)
 
   useEffect(() => {
     const token = searchParams.get("token");
     if (token && token !== "") {
-      afterAuthGoogleCallback(token, navigate);
-      afterAuthMicrosoftCallback(token, navigate);
+      afterAuthSSOCallback(token, navigate);
     }
-  }, [searchParams, navigate, afterAuthGoogleCallback, afterAuthMicrosoftCallback]);
+  }, [searchParams, navigate, afterAuthSSOCallback]);
 
 
   const onSubmit = async ({ email, password }) => {
