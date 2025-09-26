@@ -6,7 +6,7 @@ import './i18n'
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={"/book-bun-app/"}>
       <App />
     </BrowserRouter>
   // </StrictMode>
