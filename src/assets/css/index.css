@@ -1,2 +1,27 @@
+
+
 @import "tailwindcss";
 @import "tw-animate-css";
+
+@import './button.css';
+@import './card.css';
+@import './dropdown.css';
+@import './font-face.css';
+@import './form.css';
+@import './input.css';
+@import './label.css';
+@import './layout.css';
+@import './scrollbar.css';
+@import './table.css';
+@import './text.css';
+@import './theme.css';
+@import './tooltip.css';
+@import './transfer.css';
+@import './utility.css';
+@import './variables.css';
+
+
+
+
+
+

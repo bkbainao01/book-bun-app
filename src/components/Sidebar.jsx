@@ -9,6 +9,8 @@ import {
   faRightFromBracket,
   faSun,
   faUsers,
+  faX,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -16,8 +18,9 @@ import { Switch } from "./ui/switch";
 import { useAuthStore } from "@/stores/authStore";
 import { useForm } from "react-hook-form"
 import { useEffect } from "react";
+import { Button } from "./ui/button";
 
-const initMenuList = [
+  const initMenuList = [
     {
       name: "Dashboard",
       route: "/dashboard",
@@ -49,11 +52,11 @@ const initMenuList = [
   ];
 
 
-  const onClickMenu = (item, navigate) => {
+  function onClickMenu (item, navigate) {
       navigate(item.route);
   };
 
-  const menuChildListElement = (childList, currentPath, navigate)=>{
+  function menuChildListElement (childList, currentPath, navigate) {
     return childList.map((child, index ) => {
       const isActive = child.route === currentPath;
       return (
@@ -65,7 +68,7 @@ const initMenuList = [
     })
   }
 
-  const menuListElement = (menuList, currentPath, navigate , isClose) => {
+  function menuListElement (menuList, currentPath, navigate , isClose) {
     return menuList.map((item, index) => {
       const isActive = item.route === currentPath;
       return (
@@ -80,9 +83,9 @@ const initMenuList = [
     })
   }
 
-  const onClickDarkModeToggle = (value , setIsDarkMode) => {
+  function onClickDarkModeToggle(value , setIsDarkMode) {
     setIsDarkMode(value);
-    const element = document.getElementById("main-layout")
+    const element = document.getElementById("root")
     if(element && value) {
       element.classList.add("dark");
     } else if(element && !value) {
@@ -92,8 +95,8 @@ const initMenuList = [
     }
   }
 
-  const setDefaultMode = (isDarkMode)=>{
-    const element = document.getElementById("main-layout");
+  function setDefaultMode(isDarkMode) {
+    const element = document.getElementById("root");
     if (element) {
       if (isDarkMode) {
         element.classList.add("dark");
@@ -103,22 +106,68 @@ const initMenuList = [
     }
   }
 
-function SidebarComponent() {
+function toggleSidebar({ setSidebarStatus ,sidebarStatus }) {
+  setSidebarStatus(sidebarStatus == 'open' ? 'minimize' : 'open');
+}
+
+function onCloseFullSidebar({setSidebarStatus , size}) {
+  setSidebarStatus('close');
+  const element = document.getElementById("sidebarEl");
+  if (element && size.width < 416) {
+    element.classList.replace("full","close");
+  } else if (element && size.width <= 580) {
+    element.classList.replace("full","minimize");
+  }  else if (element && size.width > 580) {
+    element.classList.replace("full","open");
+  }
+}
+
+function SidebarComponent({
+  size = { width: 0, height: 0 },
+  sidebarStatus = '',
+  setSidebarStatus
+}) {
   const navigate = useNavigate();
   const authStore = useAuthStore();
   const [menuList, setMenuList] = useState([...initMenuList]);
-  const [isClose, setIsClose] = useState(false);
   const isDarkModeDefault = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const [isDarkMode, setIsDarkMode] = useState(isDarkModeDefault);
   const location = useLocation();
   const currentPath = location.pathname;
 
   useEffect(() => {
-    setDefaultMode(isDarkMode)
+    const element = document.getElementById('sidebarEl');
+    if(element && size.width < 416){
+      if(element.classList.contains('minimize') ) {
+        element.classList.replace('minimize', 'close')
+      }
+    } else if(size.width <= 580) {
+      setSidebarStatus('minimize');
+      if(element.classList.contains('open') ) {
+        element.classList.replace('open', 'minimize')
+      } else if(element.classList.contains('close')){
+        element.classList.replace('close', 'minimize')
+      } else if(element.classList.contains('full')){
+        element.classList.replace('full', 'minimize')
+      }
+    } else if(size.width > 580) {
+      setSidebarStatus('open');
+      if(element.classList.contains('close') ) {
+        element.classList.replace('close', 'open')
+      } else if(element.classList.contains('minimize')){
+        element.classList.replace('minimize', 'open')
+      } else if(element.classList.contains('full')){
+        element.classList.replace('full', 'open')
+      }
+    }
+}, [size,setSidebarStatus]);
+
+  useEffect(() => {
+    setDefaultMode(isDarkMode);
   }, [isDarkMode]);
 
   return (
-    <div className={`sidebar ${ isClose ? 'close' : ''}`}>
+    <div className={`sidebar ${ sidebarStatus }`} id="sidebarEl">
       <div className="sidebar-box">
         <div className="header">
           <div className="logo">
@@ -130,12 +179,21 @@ function SidebarComponent() {
               <span className="desc">Book System</span>
             </div>
           </div>
-          <div className="toggle-button" onClick={()=>setIsClose(!isClose)} >
-            <FontAwesomeIcon icon={ isClose ? faCaretRight : faCaretLeft } />
-          </div>
+          {
+            size?.width > 580 && (
+              <div className="toggle-button" onClick={()=> toggleSidebar({setSidebarStatus, sidebarStatus})} >
+                <FontAwesomeIcon icon={ sidebarStatus == 'minimize' ? faCaretRight : faCaretLeft } />
+              </div>
+            )
+          }
+          { sidebarStatus == 'full' && (
+            <div className="" onClick={()=> onCloseFullSidebar({setSidebarStatus, size})} >
+              <FontAwesomeIcon icon={ faXmark }  />
+            </div>
+          ) }
         </div>
         <div className="menu-bar">
-          { menuListElement(menuList, currentPath, navigate, isClose) }
+          { menuListElement(menuList, currentPath, navigate, sidebarStatus == 'minimize') }
         </div>
         <div className="footer">
           <div className="footer-items">
@@ -144,12 +202,13 @@ function SidebarComponent() {
               <div className="menu-item-name">Logout</div>
             </div>
             <div className="menu-item" title={ isDarkMode ? 'Dark Mode' : 'Light Mode' }>
-              { !isClose && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
+              { !sidebarStatus == 'minimize' && (<div className="menu-item-icon"><FontAwesomeIcon icon={ isDarkMode ? faMoon : faSun } /></div>)}
               <div className="menu-item-name">{isDarkMode ? 'Dark' : 'Light'} Mode</div>
-              <div className={`menu-item-switch ${ isClose ? '':'ml-auto'}`}>
-                <Switch className="mt-1"
+              <div className={`menu-item-switch ${ sidebarStatus == 'minimize' ? '':'ml-auto'}`}>
+                <Switch
+                  className="mt-1"
                   checked={isDarkMode}
-                  onCheckedChange={(value)=>onClickDarkModeToggle(value, setIsDarkMode)}></Switch>
+                  onCheckedChange={(value)=> onClickDarkModeToggle(value, setIsDarkMode)}></Switch>
               </div>
             </div>
           </div>

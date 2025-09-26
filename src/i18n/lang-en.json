@@ -1,0 +1,34 @@
+{
+    "form": {
+        "email": "Email",
+        "password": "Password",
+        "firstname": "Firstname",
+        "lastname": "Lastname",
+        "roles": "Roles",
+        "status": "Status",
+        "nameTh": "Name (TH)",
+        "nameEn": "Name (EN)",
+        "author": "Author",
+        "publisher": "Publisher",
+        "publishAt": "Publisher At",
+        "pages": "Pages",
+        "price": "Price",
+        "discount": "Discount",
+        "description": "Discription",
+        "uploadImage": "Upload Image"
+    },
+    "validate-text":{
+        "required":"is required"
+    },
+    "message":{
+    },
+    "button":{
+        "save" :"Save",
+        "cancel":"Cancel"
+    },
+    "transfer":{
+        "available": "Available",
+        "selected": "Selected",
+        "placeholder":"Enter Keyword"
+    }
+}

@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent } from '@/components/ui/card';
-import { toast } from "sonner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faG } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from "react-router-dom";
-import { faApple, faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 
 export default function LoginPage() {
   const {
@@ -17,23 +16,40 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm();
 
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false)
   const [isPwdVisible, setPwdVisible] = useState(false)
 
   const navigate = useNavigate()
   const login = useAuthStore((state) => state.login)
+  const authGoogle = useAuthStore((state) => state.authGoogle)
+  const authMicrosoft = useAuthStore((state) => state.authMicrosoft)
+  const afterAuthSSOCallback = useAuthStore((state) => state.afterAuthSSOCallback)
+
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token && token !== "") {
+      afterAuthSSOCallback(token, navigate);
+    }
+  }, [searchParams, navigate, afterAuthSSOCallback]);
+
 
   const onSubmit = async ({ email, password }) => {
-    setLoading(true)
-    try {
-      await login(email, password)
-      toast.success("Login Successfully")
-      navigate('/dashboard', { replace: true })
-    } catch (err) {
-      console.error('Login resp:', err)
-      toast.error(`Login Failed -- ${err}`)
-      setLoading(false)
-    }
+    setLoading(true);
+    await login(email, password, navigate);
+    setLoading(false);
+  }
+
+  const onGoogleAuth = async () => {
+    setLoading(true);
+    await authGoogle();
+    setLoading(false);
+  }
+
+  const onMicrosoftAuth = async () => {
+    setLoading(true);
+    await authMicrosoft();
+    setLoading(false);
   }
 
   return (
@@ -77,31 +93,29 @@ export default function LoginPage() {
               {loading ? 'Logging in...' : 'Login'}
             </Button>
 
-            <div>or continue with</div>
-            <div className="social-buttons">
-              <Button
+            <div className="inline-flex items-center justify-center w-full">
+                <hr className="w-64 h-px my-8 bg-white border-0 dark:text-white"/>
+                <span className="mx-2">or</span>
+                <hr className="w-64 h-px my-8 bg-white border-0 dark:text-white"/>
+            </div>
+            <div className="">
+            <Button
                 type="button"
                 disabled={loading}
-                size="icon"
-                variant="secondary"
+                variant="outline"
+                className={"w-full mb-3"}
+                onClick={() => onGoogleAuth()}
               >
-                <FontAwesomeIcon icon={faGoogle} />
+                <FontAwesomeIcon icon={faGoogle} /> Sign in with Google
               </Button>
               <Button
                 type="button"
                 disabled={loading}
-                size="icon"
-                variant="secondary"
+                variant="outline"
+                className={"w-full mb-3"}
+                onClick={() => onMicrosoftAuth()}
               >
-                <FontAwesomeIcon icon={faApple} />
-              </Button>
-              <Button
-                type="button"
-                disabled={loading}
-                size="icon"
-                variant="secondary"
-              >
-                <FontAwesomeIcon icon={faFacebookF} />
+                <FontAwesomeIcon icon={faMicrosoft} /> Sign in with Microsoft
               </Button>
             </div>
           </form>

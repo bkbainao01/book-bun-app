@@ -1,14 +1,4 @@
 import { useEffect } from "react"
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -19,114 +9,167 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { toast } from "sonner"
 import { useBookStore } from "@/stores/bookStore"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPen, faPlus, faPrint, faTrash } from "@fortawesome/free-solid-svg-icons"
-import TableComponent from "@/components/TableDataComponent"
+import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import TableDataComponent from "@/components/TableDataComponent"
 import { useNavigate } from "react-router-dom"
 
 const onEdit = (obj, navigate)=>{
   navigate(`/base-info/books/view/${obj.id}`)
 }
+
 const onPrint = (obj, navigate)=>{
   navigate(`/base-info/books/print/${obj.id}`)
 }
-const onDelete = (obj)=>{
-  console.log("parent ==> OnDelete: ",obj)
+
+const onDelete = async (obj, deleteBook)=>{
+  await deleteBook(obj.original.id);
 }
 
 const onNewBook = async (navigate)=>{
   navigate('/base-info/books/create/')
 }
 
-const tableHeaders = [
-              {
-                name:'Name',
-                width:'',
-                class: '',
-              },
-              {
-                name:'Author',
-                width:'',
-                class: '',
-              }, {
-                name:'Price',
-                width:'',
-                class: '',
-              }, {
-                name:'Status',
-                width:'',
-                class: '',
-              }, {
-                name:'Action',
-                width:'',
-                class: '',
-              }
-            ];
-
 const tableColumns = [
   {
-    name: 'name',
+    key: 'nameTh',
+    title:'Name (TH)',
+    type:'string',
     class:''
   },
   {
-    name: 'author',
+    key: 'nameEn',
+    title:'Name (En)',
+    type:'string',
     class:''
   },
   {
-    name: 'price',
+    key: 'author',
+    title:'Author',
+    type:'string',
     class:''
   },
   {
-    name: 'status',
+    key: 'publisher',
+    title:'Publisher',
+    type:'string',
+    class:''
+  },
+  {
+    key: 'publishAt',
+    title:'Publish Date',
+    type:'date',
+    class:''
+  },
+  {
+    key: 'price',
+    title:'Price',
+    type:'string',
+    class:''
+  },
+  {
+    key: 'status',
+    type:'status',
     class:''
   },
 ]
 
+const filters = [
+  {
+    key: 'nameTh',
+    title:'Name (TH)',
+    type:'string',
+    placeholder: 'Filter Name TH',
+    class:''
+  },
+  {
+    key: 'nameEn',
+    title:'Name (En)',
+    type:'string',
+    placeholder: 'Filter Name EN',
+    class:''
+  },
+  {
+    key: 'author',
+    title:'Author',
+    type:'string',
+    placeholder: 'Filter Author',
+    class:''
+  },
+  {
+    key: 'publisher',
+    title:'Publisher',
+    type:'string',
+    placeholder: 'Filter Publisher',
+    class:''
+  },
+  {
+    key: 'publishAt',
+    title:'Publish Date',
+    type:'date',
+    placeholder: 'Filter Publish Date',
+    class:''
+  },
+  {
+    key: 'price',
+    title:'Price',
+    type:'string',
+    placeholder: 'Filter Price',
+    class:''
+  },
+  {
+    key: 'status',
+    type:'enum',
+    placeholder: 'Filter Status',
+    class:''
+  },
+  {
+    key: 'keyword',
+    type:'keyword',
+    placeholder: 'Filter Name En, Name TH, Author, Publisher',
+    class:''
+  },
+]
 
 export default function BookList() {
   const navigate = useNavigate();
   const bookStore = useBookStore();
   const getAllBooks = useBookStore(state => state.getAll);
+  const deleteBook = useBookStore(state => state.deleteBook);
   const bookList = bookStore.data;
+
   useEffect(() => {
     getAllBooks();
   }, [getAllBooks]);
-  let totalPrice = 0;
-  bookList.forEach((item)=>{
-    totalPrice += item.price
-  })
-
 
   return (
-    <>
-    <div className="book-list">
-      <Card className="card">
-        <CardHeader>
-          <CardTitle className={'text-start header'}>Books</CardTitle>
-          <CardDescription className={'text-start text-muted'} >Books Information</CardDescription>
-          <CardAction>
-            <Button className='button-new' onClick={()=>onNewBook(navigate)} ><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New Book</Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <TableComponent
-            tableName="book-table"
-            headers={tableHeaders}
-            columns={tableColumns}
-            dataList={bookList}
-            action={{ isAction:true, isEdit: true, isPrint:true, isDelete: true}}
-            onEdit={(value)=>onEdit(value , navigate)}
-            onPrint={(value)=>onPrint(value , navigate)}
-            onDelete={(value)=>onDelete(value)}
-          ></TableComponent>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-        </CardFooter>
-      </Card>
-    </div>
-    </>
-  )
+      <>
+      <div className="book-list">
+        <Card className="card">
+          <CardHeader>
+            <CardTitle className={'text-start header'}>Books</CardTitle>
+            <CardDescription className={'text-start text-muted'}  >Books Information</CardDescription>
+            <CardAction onClick={()=>onNewBook(navigate) }>
+              <Button className="button-new"><FontAwesomeIcon icon={faPlus} ></FontAwesomeIcon>New Book</Button>
+            </CardAction>
+          </CardHeader>
+          <CardContent>
+            <TableDataComponent
+              tableName="user-table"
+              tableColumns={tableColumns}
+              dataList={bookList}
+              filters={filters}
+              action={{ isAction:true, isEdit: true, isPrint:false, isDelete: true}}
+              onEdit={(value)=>onEdit(value, navigate)}
+              onPrint={(value)=>onPrint(value, navigate)}
+              onDelete={(value)=>onDelete(value, deleteBook)}
+            ></TableDataComponent>
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+          </CardFooter>
+        </Card>
+      </div>
+      </>
+    )
 }

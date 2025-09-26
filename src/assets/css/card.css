@@ -1,8 +1,5 @@
-
-@use './variables.scss' as *;
-
 .card {
-    background-color: $card-color;
+    background-color: #333;
     color: #eee0e0;
     border-radius: 12px;
     padding: 1.5rem;

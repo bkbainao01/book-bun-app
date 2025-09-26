@@ -1,0 +1,31 @@
+{
+    "form": {
+        "email": "อีเมล",
+        "password": "รหัสผ่าน",
+        "firstname": "ชื่อ",
+        "lastname": "นามสกุล",
+        "roles": "หน้าที่",
+        "status": "สถานะ",
+        "nameTh": "ชื่อ (TH)",
+        "nameEn": "ชื่อ (EN)",
+        "author": "ผู้เขียน",
+        "publisher": "สำนักพิมพ์",
+        "publishAt": "วันที่พิมพ์",
+        "pages": "หน้า",
+        "price": "ราคา",
+        "discount": "ส่วนลด",
+        "description": "คำอธิบาย",
+        "uploadImage": "อัพโหลดรูปภาพ"
+    },
+    "message":{
+    },
+    "button":{
+        "save" :"บันทึก",
+        "cancel":"ยกเลิก"
+    },
+    "transfer":{
+        "available": "ที่มี",
+        "selected": "ที่เลือก",
+        "placeholder":"ค้นหา..."
+    }
+}

@@ -1,24 +1,11 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { useBookStore } from "@/stores/bookStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPen,
-  faPlus,
   faPrint,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -27,15 +14,11 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -46,72 +29,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableCaption,
-  TableFooter,
 } from "@/components/ui/table";
+import moment from "moment";
 
-// export default function TableDataComponent({
-//     tableName = '',
-//     action = {
-//       isAction: false,
-//       isEdit: false,
-//       isDelete: false,
-//       isPrint: false,
-//     },
-//     dataList = [],
-//     headers = [],
-//     columns = [],
-//     onEdit,
-//     onPrint,
-//     onDelete,
-// }) {
-
-//   return (
-//     <div className="table-component">
-//     <Table className={`table-element ${tableName}`} >
-//       <TableHeader>
-//         <TableRow>
-//           { headers.map((header, index) => (
-//                 <TableHead className={``} key={index}>{ header.name || '' }</TableHead>
-//             ))
-//           }
-//         </TableRow>
-//       </TableHeader>
-//       <TableBody>
-//         { dataList.map((item, index) => (
-//           <TableRow key={index} className="">
-//             { columns.map((column, colIndex) => (
-//                 <TableCell className="font-medium" key={colIndex}>
-//                     { item[column.name] || <Badge variant="outline" className={`badge-ready`}>Ready</Badge> }
-//                 </TableCell>
-//               ))
-//             }
-//             { action.isAction &&
-//               <TableCell className="font-medium">
-//                   { action.isEdit &&
-//                     <Button className="button-edit me-2" size="sm" onClick={()=>onEdit(item)} ><FontAwesomeIcon icon={faPen} /></Button>
-//                   }
-//                   { action.isPrint &&
-//                     <Button className="button-print me-2" size="sm" onClick={()=>onPrint(item)} ><FontAwesomeIcon icon={faPrint} /></Button>
-//                   }
-//                   { action.isDelete &&
-//                     <Button className="button-delete" size="sm" onClick={()=>onDelete(item)} ><FontAwesomeIcon icon={faTrash} /></Button>
-//                   }
-//               </TableCell>
-//             }
-//           </TableRow>
-//          ))}
-//       </TableBody>
-//       <TableFooter>
-//         {/* <TableRow>
-//           <TableCell colSpan={2}>Total</TableCell>
-//           <TableCell >{totalPrice}</TableCell>
-//         </TableRow> */}
-//       </TableFooter>
-//     </Table>
-//     </div>
-//   )
-// }
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 // 🔹 Columns definition
 
@@ -122,24 +53,79 @@ function capitalizeLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-const dynamicColList = (col) => {
+function dynamicColList(col) {
   return col.map((field) => ({
     accessorKey: field.key,
-    header: capitalizeLetter(field.key),
+    header: field.title || capitalizeLetter(field.key),
     enableHiding: false,
     cell: ({ row }) => {
-      if (field.key == "roles") {
-        return row.original[field.key]
-          .map((item) => `${item.role.name}`)
-          .join(", ");
-      } else if (field.key == "status") {
-        return row.getValue(field.key) === true ? "True" : "False";
-      } else {
-        return row.getValue(field.key);
+      let date = null
+      switch (field.type) {
+        case 'roles':
+          return row.original[field.key]
+            .map((item) => `${item.role.name}`)
+            .join(", ");
+        case 'status':
+          return row.getValue(field.key) === true ? "True" : "False";
+        case 'date':
+          date = moment(row.getValue(field.key)).format('DD/MM/YYYY')
+          return date;
+        default:
+          return row.getValue(field.key);
       }
     },
   }));
 };
+
+function filterInput(filters, table) {
+  return filters.map((filter, fIndex) => {
+    switch (filter.type) {
+      case 'string':
+        return <Input
+          key={filter.key}
+          id={`${filter.key}-${fIndex}`}
+          placeholder={filter.placeholder}
+          value={table.getColumn(filter.key)?.getFilterValue() ?? ""}
+          onChange={(event) =>
+            table.getColumn(filter.key)?.setFilterValue(event.target.value)
+          }
+          className="w-50 my-1 me-2"
+        />
+    }
+  });
+}
+
+function filterPart(filters, table) {
+  return (
+    <>
+      <div className="flex flex-wrap items-center py-4">
+        {filterInput(filters, table)}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </>
+  )
+}
 
 // 🔹 Main table component
 export default function TableDataComponent({
@@ -152,6 +138,7 @@ export default function TableDataComponent({
   },
   dataList = [],
   tableColumns = [],
+  filters = [],
   onEdit,
   onPrint,
   onDelete,
@@ -189,13 +176,24 @@ export default function TableDataComponent({
               </Button>
             )}
             {action.isDelete && (
-              <Button
-                className="button-delete"
-                size="sm"
-                onClick={() => onDelete(row)}
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </Button>
+              <AlertDialog >
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="button-delete" size="sm">
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>ลบไหม?
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => onDelete(row)} >Confirm</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             )}
           </div>
         );
@@ -203,9 +201,6 @@ export default function TableDataComponent({
     },
   ];
 
-  useEffect(() => {
-    console.log("dataList  >> ", dataList);
-  }, [dataList]);
 
   const table = useReactTable({
     data: dataList ?? [],
@@ -228,38 +223,7 @@ export default function TableDataComponent({
 
   return (
     <div className={`${tableName} tableData w-full`} id="TableData">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value={table.getColumn("email")?.getFilterValue() ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {filterPart(filters, table)}
 
       <div className="rounded-md border">
         <Table>
@@ -271,9 +235,9 @@ export default function TableDataComponent({
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
