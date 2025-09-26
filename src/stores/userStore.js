@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { getAll, getById, create as createUser, update, deleteUser } from '@/services/userService';
 import { toast } from "sonner"
-import { replace } from 'react-router-dom';
 
 
 export const useUserStore = create((set) => ({
