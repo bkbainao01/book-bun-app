@@ -1,6 +1,6 @@
 {
   "name": "book-bun-app",
-  "private": true,
+  "homepage": "https://bkbainao01.github.io/book-bun-app/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -80,6 +80,5 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bkbainao01/book-bun-app/issues"
-  },
-  "homepage": "https://bkbainao01.github.io/book-bun-app"
+  }
 }
