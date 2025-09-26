@@ -1,7 +1,7 @@
 // src/routes.jsx
 import { Navigate } from 'react-router-dom';
 import MainLayout from '@/layouts/MainLayout';
-import LoginPage from '@/pages/ff';
+import LoginPage from '@/pages/LoginPage';
 import UserList from '@/components/user/UserList';
 import UserViewer from '@/components/user/UserViewer';
 import BookList from '@/components/book/BookList';
