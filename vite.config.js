@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/book-bun-app/',
+  base: '',
   plugins: [react(), tailwindcss()],
   optimizeDeps: {
     include: ["@tanstack/react-table", "@tanstack/table-core"]
