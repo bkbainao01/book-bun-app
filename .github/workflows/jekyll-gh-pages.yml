@@ -41,6 +41,8 @@ jobs:
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           NODE_ENV: production
+      - name: show env
+        run: echo "🍏 ENV is VITE_API_BASE_URL >> ${{ secrets.VITE_API_BASE_URL }}."
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
