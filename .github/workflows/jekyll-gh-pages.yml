@@ -7,9 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      VITE_BASE_API_URL: ${{ secrets.BASE_API_URL }}
-      NODE_ENV: production
     steps:
       - uses: actions/checkout@v5
 
@@ -25,11 +22,13 @@ jobs:
           npm cache clean --force
           npm install
 
-      - name: Show ENV
-        run: "echo \"🍏 ENV before build: $VITE_BASE_API_URL\""
-
       - name: Build
-        run: npm run build
+        run: |
+          "echo \"🍏 ENV before build: $VITE_BASE_API_URL\""
+          npm run build
+        env:
+          NODE_ENV: production
+          VITE_BASE_API_URL: ${{ secrets.BASE_API_URL }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
