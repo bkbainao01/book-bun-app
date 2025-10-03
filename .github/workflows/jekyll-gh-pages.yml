@@ -38,6 +38,9 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          NODE_ENV: production
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
