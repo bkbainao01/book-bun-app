@@ -23,9 +23,7 @@ jobs:
           npm install
 
       - name: Build
-        run: |
-          "echo \"🍏 ENV before build: $VITE_BASE_API_URL\""
-          npm run build
+        run: npm run build
         env:
           NODE_ENV: production
           VITE_BASE_API_URL: ${{ secrets.BASE_API_URL }}
